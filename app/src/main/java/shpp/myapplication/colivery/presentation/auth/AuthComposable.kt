@@ -11,10 +11,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import shpp.myapplication.colivery.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun AuthComposable() {
+fun AuthComposable(
+    navController: NavController = rememberNavController(),
+    viewModel: AuthViewModel = viewModel()
+) {
     var email = ""
     var password = ""
     Column(Modifier.fillMaxSize()) {
@@ -30,6 +36,9 @@ fun AuthComposable() {
         }) {
             Text("Sign up")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             modifier = Modifier

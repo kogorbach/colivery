@@ -66,4 +66,8 @@ dependencies {
     def hiltVersion = "2.40.5"
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+
+    // Compose navigation
+    implementation "androidx.navigation:navigation-compose:2.4.2"
+
 }
