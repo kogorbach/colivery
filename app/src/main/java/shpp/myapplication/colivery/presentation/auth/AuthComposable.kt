@@ -1,4 +1,4 @@
-package shpp.myapplication.colivery.presentation
+package shpp.myapplication.colivery.presentation.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -30,6 +30,7 @@ fun AuthComposable() {
         }) {
             Text("Sign up")
         }
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             modifier = Modifier
                 .align(Alignment.End)
@@ -37,7 +38,7 @@ fun AuthComposable() {
             text = stringResource(R.string.alreadyHaveAccount),
             color = colorResource(
                 id =
-                R.color.purple_200
+                R.color.purple_500
             )
         )
     }
