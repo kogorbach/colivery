@@ -3,12 +3,13 @@ package shpp.myapplication.colivery.presentation.auth
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
 
@@ -25,9 +26,13 @@ class AuthActivity : ComponentActivity() {
                     composable("authScreen") {
                         AuthComposable(navController)
                     }
-                    composable("registrationScreen") {
-//                        argument("email")
-//                        argument("password")
+                    composable(
+                        "registrationScreen/{email}/{password}",
+                        arguments = listOf(
+                            navArgument("email") { type = NavType.StringType },
+                            navArgument("password") { type = NavType.StringType })
+                    ) {
+                        RegistrationComposable(navController)
                     }
                 }
             }

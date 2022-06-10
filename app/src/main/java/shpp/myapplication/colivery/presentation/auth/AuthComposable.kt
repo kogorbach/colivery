@@ -4,8 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,19 +25,19 @@ fun AuthComposable(
 ) {
     val viewModel = viewModel(AuthViewModel::class.java)
 
-    var email = ""
-    var password = ""
-
     Column(Modifier.fillMaxSize()) {
-        TextField(value = "email", modifier = Modifier.fillMaxWidth(), onValueChange = {
-            email = it
-        })
-        TextField(value = "password", modifier = Modifier.fillMaxWidth(), onValueChange = {
-            password = it
-        })
+        EmailTextField(onValueChange = { viewModel.email = it })
+        PasswordTextField(onValueChange = { viewModel.password = it })
         Spacer(modifier = Modifier.height(8.dp))
         AuthButton(
-            email, password, viewModel.state, Modifier.align(Alignment.CenterHorizontally)
+            viewModel.state, Modifier.align(Alignment.CenterHorizontally),
+            onClick = {
+                if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
+                    navController.navigate("registrationScreen")
+                } else {
+                    // TODO intent to MainActivity [by ratrider:]
+                }
+            }
         )
         Spacer(modifier = Modifier.height(8.dp))
         ChangeAuthActionText(
@@ -45,7 +45,8 @@ fun AuthComposable(
                 .align(Alignment.End)
                 .padding(8.dp), onClick = {
                 viewModel.changeState()
-            }, viewModel.state)
+            }, viewModel.state
+        )
         Spacer(modifier = Modifier.height(8.dp))
         GoogleAuthButton(Modifier.align(Alignment.CenterHorizontally), onAuthClick = {
             viewModel.signInWithGoogle()
@@ -54,14 +55,31 @@ fun AuthComposable(
 }
 
 @Composable
+private fun EmailTextField(onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = "",
+        modifier = Modifier.fillMaxWidth(),
+        onValueChange = onValueChange,
+        label = { Text(text = "Email") })
+}
+
+@Composable
+private fun PasswordTextField(onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = "",
+        modifier = Modifier.fillMaxWidth(),
+        onValueChange = onValueChange,
+        label = { Text(text = "Password") })
+}
+
+@Composable
 private fun AuthButton(
-    email: String,
-    password: String,
     authState: AuthViewModel.AuthState,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: () -> Unit
 ) {
     Button(modifier = modifier, onClick = {
-        auth(email, password)
+        onClick()
     }) {
         Text(authState.text)
     }
@@ -69,13 +87,21 @@ private fun AuthButton(
 
 
 @Composable
-private fun ChangeAuthActionText(modifier: Modifier, onClick: () -> Unit, state: AuthViewModel.AuthState) {
+private fun ChangeAuthActionText(
+    modifier: Modifier,
+    onClick: () -> Unit,
+    state: AuthViewModel.AuthState
+) {
     ClickableText(modifier = modifier,
-        text = AnnotatedString(stringResource(id = if (state == AuthViewModel.AuthState.SIGN_UP) {
-            R.string.alreadyHaveAccount
-        } else {
-            R.string.newToTheApp
-        })),
+        text = AnnotatedString(
+            stringResource(
+                id = if (state == AuthViewModel.AuthState.SIGN_UP) {
+                    R.string.alreadyHaveAccount
+                } else {
+                    R.string.newToTheApp
+                }
+            )
+        ),
         onClick = {
             onClick()
         })
@@ -91,10 +117,6 @@ private fun GoogleAuthButton(modifier: Modifier, onAuthClick: () -> Unit) {
         )
         Text(text = "Sign in with Google")
     }
-}
-
-private fun auth(email: String, password: String) {
-
 }
 
 @Preview
