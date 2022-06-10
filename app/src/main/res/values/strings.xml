@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">colivery</string>
     <string name="alreadyHaveAccount">Already have an account? Sign in</string>
+    <string name="newToTheApp">New to the app? Sign up</string>
 </resources>

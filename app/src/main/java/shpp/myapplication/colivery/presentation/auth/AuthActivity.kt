@@ -15,8 +15,6 @@ import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
 @AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
 
-    private val viewModel: AuthViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -25,9 +23,11 @@ class AuthActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "authScreen") {
                     composable("authScreen") {
-                        AuthComposable(navController, viewModel)
+                        AuthComposable(navController)
                     }
                     composable("registrationScreen") {
+//                        argument("email")
+//                        argument("password")
                     }
                 }
             }
