@@ -119,7 +119,7 @@ private fun GoogleAuthButton(modifier: Modifier, onAuthClick: () -> Unit) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewAuth() {
     AuthComposable()

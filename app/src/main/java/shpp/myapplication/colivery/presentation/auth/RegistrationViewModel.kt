@@ -7,14 +7,10 @@ import javax.inject.Inject
 @HiltViewModel
 class RegistrationViewModel @Inject constructor() : ViewModel() {
 
-    var nickname: String = ""
-    var telegram: String = ""
+    var nickname: String? = null
+    var telegram: String? = null
 
-    fun signUp() {
-        // todo implement
-    }
-
-    fun completeRegistration() {
-        TODO("Not yet implemented")
+    fun signUp(email: String?, password: String?) {
+        //todo implement
     }
 }

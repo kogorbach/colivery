@@ -12,22 +12,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import shpp.myapplication.colivery.R
 
 @Composable
-fun RegistrationComposable(navController: NavController) {
+fun RegistrationComposable(email: String?, password: String?) {
     val viewModel: RegistrationViewModel = viewModel()
     Column(
         modifier = Modifier
             .fillMaxHeight()
             .padding(horizontal = 8.dp), verticalArrangement = Arrangement.SpaceBetween
     ) {
-        NicknameTextField { viewModel.nickname = it }
-        TelegramTextField { viewModel.telegram = it }
+        Column {
+            NicknameTextField { viewModel.nickname = it }
+            TelegramTextField { viewModel.telegram = it }
+        }
         Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-            viewModel.completeRegistration()
+            viewModel.signUp(email, password)
         }) {
             Text(text = "Complete")
         }
@@ -36,30 +36,30 @@ fun RegistrationComposable(navController: NavController) {
 
 @Composable
 fun TelegramTextField(onValueChange: (String) -> Unit) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-//        TODO("change google icon with telegram")
-        Image(
-            painter = painterResource(id = R.drawable.ic_google),
-            contentDescription = "Telegram icon"
-        )
-        OutlinedTextField(
-            value = "",
-            onValueChange = onValueChange,
-            label = { Text(text = "telegram nickname") })
-    }
+    OutlinedTextField(
+        value = "",
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
+        leadingIcon = {
+            Image(
+                painter = painterResource(id = R.drawable.ic_telegram),
+                contentDescription = null
+            )
+        },
+        label = { Text(text = "telegram nickname") })
 }
 
 @Composable
 fun NicknameTextField(onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
         value = "",
         onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
         label = { Text(text = "Nickname") })
 }
 
 @Preview(showBackground = true)
 @Composable
 fun RegistrationComposablePreview() {
-    RegistrationComposable(rememberNavController())
+    RegistrationComposable("email", "password")
 }
