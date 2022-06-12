@@ -32,7 +32,10 @@ class AuthActivity : ComponentActivity() {
                             navArgument("email") { type = NavType.StringType },
                             navArgument("password") { type = NavType.StringType })
                     ) {
-                        RegistrationComposable(it.arguments?.getString("email"), it.arguments?.getString("password"))
+                        RegistrationComposable(
+                            it.arguments?.getString("email"),
+                            it.arguments?.getString("password")
+                        )
                     }
                 }
             }
