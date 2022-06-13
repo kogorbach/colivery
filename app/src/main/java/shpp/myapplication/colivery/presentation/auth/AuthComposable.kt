@@ -34,17 +34,16 @@ fun AuthComposable(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            EmailTextField(onValueChange = { viewModel.email = it })
-            PasswordTextField(onValueChange = { viewModel.password = it })
+            EmailTextField(viewModel.email)
+            PasswordTextField(viewModel.password)
             Spacer(modifier = Modifier.height(8.dp))
             AuthButton(
                 viewModel.state,
                 Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .semantics { contentDescription = "auth action button" },
+                    .align(Alignment.CenterHorizontally),
                 onClick = {
                     if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
-                        navController.navigate("registrationScreen")
+                        navController.navigate("registrationScreen/${viewModel.email.value}/${viewModel.password.value}")
                     } else {
                         // TODO intent to MainActivity [by ratrider:]
                     }
@@ -69,22 +68,32 @@ fun AuthComposable(
 }
 
 @Composable
-private fun EmailTextField(onValueChange: (String) -> Unit) {
+private fun EmailTextField(emailState: MutableState<String>) {
+    var input by remember { emailState }
     OutlinedTextField(
-        value = "",
-        modifier = Modifier.fillMaxWidth(),
-        onValueChange = onValueChange,
+        value = input,
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = "email input" },
+        onValueChange = {
+            input = it
+            emailState.value = it
+        },
         label = { Text(text = "Email") })
 }
 
 @Composable
-private fun PasswordTextField(onValueChange: (String) -> Unit) {
+private fun PasswordTextField(passwordState: MutableState<String>) {
+    var input by remember { passwordState }
     OutlinedTextField(
-        value = "",
+        value = input,
         modifier = Modifier
             .fillMaxWidth()
             .semantics { contentDescription = "password input" },
-        onValueChange = onValueChange,
+        onValueChange = {
+            input = it
+            passwordState.value = it
+        },
         label = { Text(text = "Password") })
 }
 
@@ -94,7 +103,7 @@ private fun AuthButton(
     modifier: Modifier,
     onClick: () -> Unit
 ) {
-    Button(modifier = modifier, onClick = {
+    Button(modifier = modifier.semantics { contentDescription = "auth action button" }, onClick = {
         onClick()
     }) {
         Text(authState.text)

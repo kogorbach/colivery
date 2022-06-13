@@ -23,6 +23,8 @@ fun RegistrationComposable(email: String?, password: String?) {
             .padding(horizontal = 8.dp), verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
+            Text(text = email?: "null email")
+            Text(text = password?: "null password")
             NicknameTextField { viewModel.nickname = it }
             TelegramTextField { viewModel.telegram = it }
         }
