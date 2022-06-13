@@ -10,6 +10,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
 
+    companion object {
+        const val PASSWORD_LENGTH = 8
+    }
+
     var state by mutableStateOf(AuthState.SIGN_UP)
     private set
 
@@ -24,12 +28,12 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun signInWithGoogle() {
+
+    }
+
     enum class AuthState(val text: String) {
         SIGN_IN("Sign in"),
         SIGN_UP("Sign up")
-    }
-
-    fun signInWithGoogle() {
-
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -70,31 +71,51 @@ fun AuthComposable(
 @Composable
 private fun EmailTextField(emailState: MutableState<String>) {
     var input by remember { emailState }
-    OutlinedTextField(
-        value = input,
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics { contentDescription = "email input" },
-        onValueChange = {
-            input = it
-            emailState.value = it
-        },
-        label = { Text(text = "Email") })
+    var error = !android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
+    Column(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = input,
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = "email input" },
+            onValueChange = {
+                input = it
+                emailState.value = it
+            },
+            label = { Text(text = "Email") })
+        if (error) {
+            Text(
+                text = "invalid email",
+                color = MaterialTheme.colors.error,
+                modifier = Modifier.semantics { contentDescription = "invalid email error" })
+        }
+    }
 }
 
 @Composable
 private fun PasswordTextField(passwordState: MutableState<String>) {
     var input by remember { passwordState }
-    OutlinedTextField(
-        value = input,
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics { contentDescription = "password input" },
-        onValueChange = {
-            input = it
-            passwordState.value = it
-        },
-        label = { Text(text = "Password") })
+    var error = input.length in 1 until AuthViewModel.PASSWORD_LENGTH
+    Column(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = input,
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentDescription = "password input" },
+            onValueChange = {
+                input = it
+                passwordState.value = it
+            },
+            label = { Text(text = "Password") },
+            isError = error
+        )
+        if (error) {
+            Text(
+                text = "invalid password",
+                color = MaterialTheme.colors.error,
+                modifier = Modifier.semantics { contentDescription = "invalid password error" })
+        }
+    }
 }
 
 @Composable
