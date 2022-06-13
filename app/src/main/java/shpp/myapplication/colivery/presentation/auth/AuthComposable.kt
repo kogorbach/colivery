@@ -6,7 +6,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,33 +27,44 @@ fun AuthComposable(
 ) {
     val viewModel = viewModel(AuthViewModel::class.java)
 
-    Column(Modifier.fillMaxSize()) {
-        EmailTextField(onValueChange = { viewModel.email = it })
-        PasswordTextField(onValueChange = { viewModel.password = it })
-        Spacer(modifier = Modifier.height(8.dp))
-        AuthButton(
-            viewModel.state, Modifier.align(Alignment.CenterHorizontally),
-            onClick = {
-                if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
-                    navController.navigate("registrationScreen")
-                } else {
-                    // TODO intent to MainActivity [by ratrider:]
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            EmailTextField(onValueChange = { viewModel.email = it })
+            PasswordTextField(onValueChange = { viewModel.password = it })
+            Spacer(modifier = Modifier.height(8.dp))
+            AuthButton(
+                viewModel.state,
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .semantics { contentDescription = "auth action button" },
+                onClick = {
+                    if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
+                        navController.navigate("registrationScreen")
+                    } else {
+                        // TODO intent to MainActivity [by ratrider:]
+                    }
                 }
-            }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(modifier = Modifier.align(Alignment.CenterHorizontally), text = "OR")
+            Spacer(modifier = Modifier.height(8.dp))
+            GoogleAuthButton(Modifier.align(Alignment.CenterHorizontally), onAuthClick = {
+                viewModel.signInWithGoogle()
+            })
+        }
         ChangeAuthActionText(
             Modifier
-                .align(Alignment.End)
-                .semantics {contentDescription = "change auth action"}
+                .align(Alignment.CenterHorizontally)
+                .semantics { contentDescription = "change auth action" }
                 .padding(8.dp), onClick = {
                 viewModel.changeState()
             }, viewModel.state
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        GoogleAuthButton(Modifier.align(Alignment.CenterHorizontally), onAuthClick = {
-            viewModel.signInWithGoogle()
-        })
     }
 }
 
@@ -70,7 +81,9 @@ private fun EmailTextField(onValueChange: (String) -> Unit) {
 private fun PasswordTextField(onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = "",
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = "password input" },
         onValueChange = onValueChange,
         label = { Text(text = "Password") })
 }

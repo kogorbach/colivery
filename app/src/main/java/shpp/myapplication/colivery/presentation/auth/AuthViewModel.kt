@@ -13,8 +13,8 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     var state by mutableStateOf(AuthState.SIGN_UP)
     private set
 
-    var email: String = ""
-    var password: String = ""
+    var email by mutableStateOf("")
+    var password by mutableStateOf("")
 
     fun changeState() {
         state = if (state == AuthState.SIGN_IN) {

@@ -1,15 +1,13 @@
 package shpp.myapplication.colivery
 
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import shpp.myapplication.colivery.presentation.auth.AuthActivity
 import shpp.myapplication.colivery.presentation.auth.AuthComposable
-import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
 
 
 /**
@@ -21,14 +19,12 @@ import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
 class AuthTest {
 
     @get:Rule(order = 0)
-    val composeTestRule = createAndroidComposeRule<AuthActivity>()
+    val composeTestRule = createComposeRule()
 
     @Before
     fun init() {
         composeTestRule.setContent {
-            ColiveryTheme {
-                AuthComposable()
-            }
+            AuthComposable()
         }
     }
 
@@ -52,20 +48,23 @@ class AuthTest {
         // todo verify invalid email error is displayed
     }
 
-    @Test fun invalidPassword() {
+    @Test
+    fun invalidPassword() {
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("pass")
         // todo verify short password error
     }
 
-    @Test fun signUp() {
+    @Test
+    fun signUp() {
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
         authActionButton().performClick()
         // todo verify navigation to RegistrationComposable
     }
 
-    @Test fun signIn() {
+    @Test
+    fun signIn() {
         changeActionText().performClick()
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
