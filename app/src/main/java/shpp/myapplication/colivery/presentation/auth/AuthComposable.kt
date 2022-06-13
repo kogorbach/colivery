@@ -87,7 +87,7 @@ private fun EmailTextField(emailState: MutableState<String>) {
             Text(
                 text = "invalid email",
                 color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "invalid email error" })
+                modifier = Modifier.semantics { contentDescription = "email error" })
         }
     }
 }
@@ -113,7 +113,7 @@ private fun PasswordTextField(passwordState: MutableState<String>) {
             Text(
                 text = "invalid password",
                 color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "invalid password error" })
+                modifier = Modifier.semantics { contentDescription = "password error" })
         }
     }
 }

@@ -44,15 +44,13 @@ class AuthTest {
     @Test
     fun invalidEmail() {
         emailTextInput().performTextInput("email")
-        authActionButton().performClick()
-        // todo verify invalid email error is displayed
+        emailError().assertIsDisplayed()
     }
 
     @Test
     fun invalidPassword() {
-        emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("pass")
-        // todo verify short password error
+        passwordError().assertIsDisplayed()
     }
 
     @Test
@@ -60,6 +58,9 @@ class AuthTest {
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
         authActionButton().performClick()
+        // then
+        emailError().assertIsNotDisplayed()
+        passwordError().assertIsNotDisplayed()
         // todo verify navigation to RegistrationComposable
     }
 
@@ -69,16 +70,14 @@ class AuthTest {
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
         authActionButton().performClick()
+        // then
+        emailError().assertIsNotDisplayed()
+        passwordError().assertIsNotDisplayed()
         //todo verify intent launch
     }
 
     private fun changeActionText(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(
-            hasContentDescription(
-                "change auth action",
-                ignoreCase = true
-            )
-        )
+        return composeTestRule.onNode(hasContentDescription("change auth action"))
     }
 
     private fun authActionButton(): SemanticsNodeInteraction {
@@ -91,5 +90,13 @@ class AuthTest {
 
     private fun passwordTextInput(): SemanticsNodeInteraction {
         return composeTestRule.onNode(hasContentDescription("password input"))
+    }
+
+    private fun emailError(): SemanticsNodeInteraction {
+        return composeTestRule.onNode(hasContentDescription("email error"))
+    }
+
+    private fun passwordError(): SemanticsNodeInteraction {
+        return composeTestRule.onNode(hasContentDescription("password error"))
     }
 }
