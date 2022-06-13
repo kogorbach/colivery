@@ -1,10 +1,7 @@
 package shpp.myapplication.colivery
 
-import androidx.compose.ui.test.SemanticsNodeInteraction
-import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.Rule
@@ -12,6 +9,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import shpp.myapplication.colivery.presentation.auth.AuthActivity
 import shpp.myapplication.colivery.presentation.auth.AuthComposable
+import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
+
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -20,32 +19,78 @@ import shpp.myapplication.colivery.presentation.auth.AuthComposable
  */
 @RunWith(AndroidJUnit4::class)
 class AuthTest {
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<AuthActivity>()
 
-//    @Test
-//    fun useAppContext() {
-//        // Context of the app under test.
-//        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-//        assertEquals("shpp.myapplication.colivery", appContext.packageName)
-//    }
+    @get:Rule(order = 0)
+    val composeTestRule = createAndroidComposeRule<AuthActivity>()
 
     @Before
     fun init() {
-        ActivityScenario.launch(AuthActivity::class.java)
         composeTestRule.setContent {
-            AuthComposable()
+            ColiveryTheme {
+                AuthComposable()
+            }
         }
     }
 
     @Test
     fun initialState() {
-        with(composeTestRule) {
-            changeActionText().assertTextEquals(activity.getString(R.string.alreadyHaveAccount))
-        }
+        changeActionText().assertTextEquals("Already have an account? Sign in")
+        authActionButton().assertTextEquals("Sign up")
+    }
+
+    @Test
+    fun changeAuthState() {
+        changeActionText().performClick()
+        changeActionText().assertTextEquals("New to the app? Sign up")
+        authActionButton().assertTextEquals("Sign in")
+    }
+
+    @Test
+    fun invalidEmail() {
+        emailTextInput().performTextInput("email")
+        authActionButton().performClick()
+        // todo verify invalid email error is displayed
+    }
+
+    @Test fun invalidPassword() {
+        emailTextInput().performTextInput("validEmail@gmail.com")
+        passwordTextInput().performTextInput("pass")
+        // todo verify short password error
+    }
+
+    @Test fun signUp() {
+        emailTextInput().performTextInput("validEmail@gmail.com")
+        passwordTextInput().performTextInput("myp@ssWord23")
+        authActionButton().performClick()
+        // todo verify navigation to RegistrationComposable
+    }
+
+    @Test fun signIn() {
+        changeActionText().performClick()
+        emailTextInput().performTextInput("validEmail@gmail.com")
+        passwordTextInput().performTextInput("myp@ssWord23")
+        authActionButton().performClick()
+        //todo verify intent launch
     }
 
     private fun changeActionText(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("change auth action"))
+        return composeTestRule.onNode(
+            hasContentDescription(
+                "change auth action",
+                ignoreCase = true
+            )
+        )
+    }
+
+    private fun authActionButton(): SemanticsNodeInteraction {
+        return composeTestRule.onNode(hasContentDescription("auth action button"))
+    }
+
+    private fun emailTextInput(): SemanticsNodeInteraction {
+        return composeTestRule.onNode(hasContentDescription("email input"))
+    }
+
+    private fun passwordTextInput(): SemanticsNodeInteraction {
+        return composeTestRule.onNode(hasContentDescription("password input"))
     }
 }
