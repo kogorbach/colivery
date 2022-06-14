@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,7 +22,9 @@ fun RegistrationComposable(email: String?, password: String?) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .padding(horizontal = 8.dp), verticalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 8.dp)
+            .semantics {contentDescription = "registration screen"},
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
             NicknameTextField { viewModel.nickname = it }

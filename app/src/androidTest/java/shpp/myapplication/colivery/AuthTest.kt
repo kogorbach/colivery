@@ -2,12 +2,19 @@ package shpp.myapplication.colivery
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import shpp.myapplication.colivery.presentation.auth.AuthComposable
+import shpp.myapplication.colivery.presentation.auth.RegistrationComposable
 
 
 /**
@@ -20,11 +27,28 @@ class AuthTest {
 
     @get:Rule(order = 0)
     val composeTestRule = createComposeRule()
+    lateinit var navController: NavHostController
 
     @Before
     fun init() {
         composeTestRule.setContent {
-            AuthComposable()
+            navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "authScreen") {
+                composable("authScreen") {
+                    AuthComposable(navController)
+                }
+                composable(
+                    "registrationScreen/{email}/{password}",
+                    arguments = listOf(
+                        navArgument("email") { type = NavType.StringType },
+                        navArgument("password") { type = NavType.StringType })
+                ) {
+                    RegistrationComposable(
+                        it.arguments?.getString("email"),
+                        it.arguments?.getString("password")
+                    )
+                }
+            }
         }
     }
 
@@ -57,11 +81,12 @@ class AuthTest {
     fun signUp() {
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
-        authActionButton().performClick()
         // then
-        emailError().assertIsNotDisplayed()
-        passwordError().assertIsNotDisplayed()
-        // todo verify navigation to RegistrationComposable
+        emailError().assertDoesNotExist()
+        passwordError().assertDoesNotExist()
+
+        authActionButton().performClick()
+        composeTestRule.onNode(hasContentDescription("registration screen")).assertIsDisplayed()
     }
 
     @Test
@@ -69,10 +94,11 @@ class AuthTest {
         changeActionText().performClick()
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
-        authActionButton().performClick()
         // then
-        emailError().assertIsNotDisplayed()
-        passwordError().assertIsNotDisplayed()
+        emailError().assertDoesNotExist()
+        passwordError().assertDoesNotExist()
+
+        authActionButton().performClick()
         //todo verify intent launch
     }
 
