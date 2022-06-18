@@ -1,5 +1,6 @@
 package shpp.myapplication.colivery.presentation.auth
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -10,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -21,13 +23,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import shpp.myapplication.colivery.R
+import shpp.myapplication.colivery.presentation.MainActivity
 
 @Composable
 fun AuthComposable(
     navController: NavController = rememberNavController()
 ) {
     val viewModel = viewModel(AuthViewModel::class.java)
-
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,49 +38,68 @@ fun AuthComposable(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            EmailTextField(viewModel.email)
-            PasswordTextField(viewModel.password)
+            EmailTextField(
+                emailState = viewModel.email,
+                errorState = viewModel.emailError,
+                modifier = Modifier.fillMaxWidth()
+            )
+            PasswordTextField(
+                passwordState = viewModel.password,
+                error = viewModel.passwordError.collectAsState(initial = false).value,
+//                errorState = viewModel.passwordError.collectAsState(initial = false).value,
+                modifier = Modifier.fillMaxWidth()
+            )
             Spacer(modifier = Modifier.height(8.dp))
             AuthButton(
-                viewModel.state,
-                Modifier
+                authState = viewModel.state,
+                modifier = Modifier
                     .align(Alignment.CenterHorizontally),
                 onClick = {
                     if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
                         navController.navigate("registrationScreen/${viewModel.email.value}/${viewModel.password.value}")
                     } else {
-                        // TODO intent to MainActivity [by ratrider:]
+//                        context.startActivity(Intent(context, MainActivity::class.java))
+                        // TODO add firebase authentication [by ratrider:]
                     }
                 }
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(modifier = Modifier.align(Alignment.CenterHorizontally), text = "OR")
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = "OR"
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            GoogleAuthButton(Modifier.align(Alignment.CenterHorizontally), onAuthClick = {
-                viewModel.signInWithGoogle()
-            })
+            GoogleAuthButton(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onAuthClick = {
+                    viewModel.signInWithGoogle()
+                })
         }
         ChangeAuthActionText(
-            Modifier
+            modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .semantics { contentDescription = "change auth action" }
-                .padding(8.dp), onClick = {
+                .padding(8.dp),
+            onClick = {
                 viewModel.changeState()
-            }, viewModel.state
+            },
+            state = viewModel.state
         )
     }
 }
 
 @Composable
-private fun EmailTextField(emailState: MutableState<String>) {
+private fun EmailTextField(
+    emailState: MutableState<String>,
+    errorState: MutableState<Boolean>,
+    modifier: Modifier
+) {
     var input by remember { emailState }
-    var error = !android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
-    Column(modifier = Modifier.fillMaxWidth()) {
+    var error by remember { errorState }
+    Column(modifier = modifier) {
         OutlinedTextField(
             value = input,
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = "email input" },
+            modifier = modifier.semantics { contentDescription = "email input" },
             onValueChange = {
                 input = it
                 emailState.value = it
@@ -93,15 +115,19 @@ private fun EmailTextField(emailState: MutableState<String>) {
 }
 
 @Composable
-private fun PasswordTextField(passwordState: MutableState<String>) {
+private fun PasswordTextField(
+    passwordState: MutableState<String>,
+    error: Boolean,
+//    errorState: MutableState<Boolean>,
+    modifier: Modifier
+) {
     var input by remember { passwordState }
-    var error = input.length in 1 until AuthViewModel.PASSWORD_LENGTH
-    Column(modifier = Modifier.fillMaxWidth()) {
+//    val error by remember { errorState }
+
+    Column(modifier = modifier) {
         OutlinedTextField(
             value = input,
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = "password input" },
+            modifier = modifier.semantics { contentDescription = "password input" },
             onValueChange = {
                 input = it
                 passwordState.value = it
@@ -124,10 +150,13 @@ private fun AuthButton(
     modifier: Modifier,
     onClick: () -> Unit
 ) {
-    Button(modifier = modifier.semantics { contentDescription = "auth action button" }, onClick = {
-        onClick()
-    }) {
-        Text(authState.text)
+    Button(
+        modifier = modifier.semantics { contentDescription = "auth action button" },
+        onClick = {
+            onClick()
+        }
+    ) {
+        Text(authState.text.authAction)
     }
 }
 
@@ -138,14 +167,11 @@ private fun ChangeAuthActionText(
     onClick: () -> Unit,
     state: AuthViewModel.AuthState
 ) {
-    ClickableText(modifier = modifier,
+    ClickableText(
+        modifier = modifier,
         text = AnnotatedString(
             stringResource(
-                id = if (state == AuthViewModel.AuthState.SIGN_UP) {
-                    R.string.alreadyHaveAccount
-                } else {
-                    R.string.newToTheApp
-                }
+                id = state.text.changeAuthAction
             )
         ),
         onClick = {
@@ -155,11 +181,15 @@ private fun ChangeAuthActionText(
 
 @Composable
 private fun GoogleAuthButton(modifier: Modifier, onAuthClick: () -> Unit) {
-    Button(modifier = modifier, onClick = {
-        onAuthClick()
-    }) {
+    Button(
+        modifier = modifier,
+        onClick = {
+            onAuthClick()
+        }
+    ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_google), contentDescription = "Google auth"
+            painter = painterResource(id = R.drawable.ic_google),
+            contentDescription = "Google auth"
         )
         Text(text = "Sign in with Google")
     }

@@ -68,12 +68,16 @@ class AuthTest {
     @Test
     fun invalidEmail() {
         emailTextInput().performTextInput("email")
+        authActionButton().performClick()
+        //then
         emailError().assertIsDisplayed()
     }
 
     @Test
     fun invalidPassword() {
         passwordTextInput().performTextInput("pass")
+        authActionButton().performClick()
+        //then
         passwordError().assertIsDisplayed()
     }
 
@@ -81,11 +85,12 @@ class AuthTest {
     fun signUp() {
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
-        // then
+        // then inputs are valid
         emailError().assertDoesNotExist()
         passwordError().assertDoesNotExist()
 
         authActionButton().performClick()
+        // then navigation is performed
         composeTestRule.onNode(hasContentDescription("registration screen")).assertIsDisplayed()
     }
 
