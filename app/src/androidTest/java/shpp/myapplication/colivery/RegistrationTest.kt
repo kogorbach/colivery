@@ -1,9 +1,9 @@
 package shpp.myapplication.colivery
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import org.junit.Before
 import org.junit.Rule
@@ -30,8 +30,25 @@ class RegistrationTest {
 
     @Test
     fun emptyNickName() {
-        nickname().performTextInput("some input")
-        nickname().performTextClearance()
+        nicknameError().assertIsDisplayed()
+    }
+
+    @Test
+    fun validNickName() {
+        nickname().performTextInput("nick")
+        nicknameError().assertDoesNotExist()
+    }
+
+    @Test
+    fun invalidTelegram() {
+        telegram().performTextInput("tel")
+        telegramError().assertIsDisplayed()
+    }
+
+    @Test
+    fun validTelegram() {
+        telegram().performTextInput("telegram")
+        telegramError().assertDoesNotExist()
     }
 
     private fun nickname(): SemanticsNodeInteraction {
