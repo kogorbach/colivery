@@ -68,7 +68,6 @@ class AuthTest {
     @Test
     fun invalidEmail() {
         emailTextInput().performTextInput("email")
-        authActionButton().performClick()
         //then
         emailError().assertIsDisplayed()
     }
@@ -76,7 +75,6 @@ class AuthTest {
     @Test
     fun invalidPassword() {
         passwordTextInput().performTextInput("pass")
-        authActionButton().performClick()
         //then
         passwordError().assertIsDisplayed()
     }
