@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,14 +40,17 @@ fun AuthComposable(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             EmailTextField(
-                emailState = viewModel.email,
-                errorState = viewModel.emailError,
-                modifier = Modifier.fillMaxWidth()
+                emailState = viewModel.email.observeAsState(),
+                errorState = viewModel.emailValid.observeAsState(),
+                modifier = Modifier.fillMaxWidth(),
+                onChange = { email ->
+                    viewModel.onEmailChange(email)
+                }
             )
             PasswordTextField(
                 passwordState = viewModel.password,
                 error = viewModel.passwordError.collectAsState(initial = false).value,
-//                errorState = viewModel.passwordError.collectAsState(initial = false).value,
+                errorState = viewModel.passwordError.collectAsState(initial = false) as MutableState<Boolean>,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -58,7 +62,7 @@ fun AuthComposable(
                     if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
                         navController.navigate("registrationScreen/${viewModel.email.value}/${viewModel.password.value}")
                     } else {
-//                        context.startActivity(Intent(context, MainActivity::class.java))
+                        context.startActivity(Intent(context, MainActivity::class.java))
                         // TODO add firebase authentication [by ratrider:]
                     }
                 }
@@ -90,22 +94,20 @@ fun AuthComposable(
 
 @Composable
 private fun EmailTextField(
-    emailState: MutableState<String>,
-    errorState: MutableState<Boolean>,
+    emailState: State<String?>,
+    errorState: State<Boolean?>,
+    onChange: (String) -> Unit,
     modifier: Modifier
 ) {
-    var input by remember { emailState }
-    var error by remember { errorState }
+    val input by remember { emailState }
     Column(modifier = modifier) {
         OutlinedTextField(
-            value = input,
+            value = input ?: "",
             modifier = modifier.semantics { contentDescription = "email input" },
-            onValueChange = {
-                input = it
-                emailState.value = it
-            },
+            onValueChange = onChange,
             label = { Text(text = "Email") })
-        if (error) {
+
+        if (errorState.value == true) {
             Text(
                 text = "invalid email",
                 color = MaterialTheme.colors.error,
@@ -118,11 +120,11 @@ private fun EmailTextField(
 private fun PasswordTextField(
     passwordState: MutableState<String>,
     error: Boolean,
-//    errorState: MutableState<Boolean>,
+    errorState: MutableState<Boolean>,
     modifier: Modifier
 ) {
     var input by remember { passwordState }
-//    val error by remember { errorState }
+    val error by remember { errorState }
 
     Column(modifier = modifier) {
         OutlinedTextField(
