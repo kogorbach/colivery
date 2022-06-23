@@ -100,9 +100,9 @@ class AuthTest {
         // then
         emailError().assertDoesNotExist()
         passwordError().assertDoesNotExist()
-
+        // launch main activity
         authActionButton().performClick()
-        //todo verify intent launch
+        mainActivity().assertIsDisplayed()
     }
 
     private fun changeActionText(): SemanticsNodeInteraction {
@@ -127,5 +127,9 @@ class AuthTest {
 
     private fun passwordError(): SemanticsNodeInteraction {
         return composeTestRule.onNode(hasContentDescription("password error"))
+    }
+
+    private fun mainActivity(): SemanticsNodeInteraction {
+        return composeTestRule.onNode(hasContentDescription("mainActivity"))
     }
 }
