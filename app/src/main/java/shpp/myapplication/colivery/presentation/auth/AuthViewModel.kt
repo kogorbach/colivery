@@ -30,7 +30,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     val emailError = MediatorLiveData<Boolean>().apply {
         addSource(emailLiveData) { email ->
             value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                    && emailFocusLost && emailWasFocused
+                    && emailFocusLost
         }
     }
 
@@ -50,18 +50,24 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun emailUnfocus() {
-        if (emailWasFocused) {
+    fun emailUnfocus(forced: Boolean = false) {
+        if (emailWasFocused || forced) {
             emailFocusLost = true
             onEmailChange()
         }
     }
 
-    fun passwordUnfocus() {
-        if (passwordWasFocused) {
+    fun passwordUnfocus(forced: Boolean = false) {
+        if (passwordWasFocused || forced) {
             passwordFocusLost = true
             onPasswordChange()
         }
+    }
+
+    fun validate(): Boolean {
+        emailUnfocus(forced = true)
+        passwordUnfocus(forced = true)
+        return passwordError.value == false && emailError.value == false
     }
 
     fun onEmailChange(input: String = emailLiveData.value!!) {

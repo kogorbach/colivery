@@ -68,7 +68,9 @@ fun AuthComposable(
                     .align(Alignment.CenterHorizontally),
                 onClick = {
                     if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
-                        navController.navigate("registrationScreen/${viewModel.emailLiveData.value}/${viewModel.passwordLiveData.value}")
+                        if (viewModel.validate()) {
+                            navController.navigate("registrationScreen/${viewModel.emailLiveData.value}/${viewModel.passwordLiveData.value}")
+                        }
                     } else {
                         context.startActivity(Intent(context, MainActivity::class.java))
                         // TODO add firebase authentication [by ratrider:]
