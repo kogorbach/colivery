@@ -1,9 +1,7 @@
 package shpp.myapplication.colivery.presentation.auth
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
@@ -14,8 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,23 +43,23 @@ fun AuthComposable(
             val focus by remember {
                 mutableStateOf(false)
             }
-            EmailTextField(
+            AuthTextField(
                 emailState = viewModel.emailLiveData.observeAsState(),
                 errorState = viewModel.emailError.observeAsState(),
-                modifier = Modifier.fillMaxWidth(),
                 onChange = { viewModel.onEmailChange(it) },
-                onUnfocus = {
-                    viewModel.unfocus()
-                    viewModel.onEmailChange()
-                },
-                onFocus = { viewModel.emailWasFocused = true }
+                onUnfocus = { viewModel.emailUnfocus() },
+                onFocus = { viewModel.emailWasFocused = true },
+                label = "email",
+                modifier = Modifier.fillMaxWidth()
             )
-            PasswordTextField(
-                passwordState = viewModel.passwordLiveData.observeAsState(),
+            AuthTextField(
+                emailState = viewModel.passwordLiveData.observeAsState(),
                 errorState = viewModel.passwordError.observeAsState(),
                 onChange = { viewModel.onPasswordChange(it) },
-                modifier = Modifier.fillMaxWidth(),
-                onUnfocus = { viewModel.passwordFocusLost = true }
+                onUnfocus = { viewModel.passwordUnfocus() },
+                onFocus = { viewModel.passwordWasFocused = true },
+                label = "password",
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             AuthButton(
@@ -105,76 +101,40 @@ fun AuthComposable(
 }
 
 @Composable
-private fun EmailTextField(
+private fun AuthTextField(
     emailState: State<String?>,
     errorState: State<Boolean?>,
     onChange: (String) -> Unit,
     onUnfocus: () -> Unit,
     onFocus: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    label: String,
 ) {
     val input by remember { emailState }
-    val focusRequester = remember { FocusRequester() }
 
     Column(modifier = modifier) {
         OutlinedTextField(
             value = input ?: "",
             modifier = modifier
-                .semantics { contentDescription = "email input" }
+                .semantics { contentDescription = "$label input" }
                 .onFocusChanged {
-                    Log.d("EmailTextField", "$it")
                     if (it.isFocused) {
                         onFocus()
-                        Log.d("EmailTextField", "!!!!onFocus!!!!!")
                     }
                     if (!it.hasFocus) {
-                        onUnfocus()
-                        Log.d("EmailTextField", "!!!!onUnfocus!!!!")
-                    }
-                }
-                .focusRequester(focusRequester)
-                .clickable { },
-            onValueChange = onChange,
-            label = { Text(text = "Email") },
-            isError = errorState.value ?: false
-        )
-
-        if (errorState.value == true) {
-            Text(
-                text = "invalid email",
-                color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "email error" })
-        }
-    }
-}
-
-@Composable
-private fun PasswordTextField(
-    passwordState: State<String?>,
-    errorState: State<Boolean?>,
-    onChange: (String) -> Unit,
-    onUnfocus: () -> Unit,
-    modifier: Modifier
-) {
-    Column(modifier = modifier) {
-        OutlinedTextField(
-            value = passwordState.value ?: "",
-            modifier = modifier
-                .semantics { contentDescription = "password input" }
-                .onFocusChanged {
-                    if (!it.isFocused) {
                         onUnfocus()
                     }
                 },
             onValueChange = onChange,
-            label = { Text(text = "Password") },
+            label = { Text(text = label) },
             isError = errorState.value ?: false
         )
+
         if (errorState.value == true) {
             Text(
-                text = "invalid password",
+                text = "invalid $label",
                 color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "password error" })
+                modifier = Modifier.semantics { contentDescription = "$label error" })
         }
     }
 }

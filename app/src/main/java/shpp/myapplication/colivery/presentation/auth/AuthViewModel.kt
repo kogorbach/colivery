@@ -50,9 +50,17 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun unfocus() {
+    fun emailUnfocus() {
         if (emailWasFocused) {
             emailFocusLost = true
+            onEmailChange()
+        }
+    }
+
+    fun passwordUnfocus() {
+        if (passwordWasFocused) {
+            passwordFocusLost = true
+            onPasswordChange()
         }
     }
 
@@ -60,7 +68,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         emailLiveData.value = input
     }
 
-    fun onPasswordChange(input: String) {
+    fun onPasswordChange(input: String = passwordLiveData.value!!) {
         passwordLiveData.value = input
     }
 
