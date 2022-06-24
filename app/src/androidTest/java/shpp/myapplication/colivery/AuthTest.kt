@@ -98,6 +98,14 @@ class AuthTest {
     }
 
     @Test
+    fun emptyFieldsSignup() {
+        authActionButton().performClick()
+        //then
+        emailError().assertIsDisplayed()
+        passwordError().assertIsDisplayed()
+    }
+
+    @Test
     fun signUp() {
         emailTextInput().performTextInput("validEmail@gmail.com")
         passwordTextInput().performTextInput("myp@ssWord23")
