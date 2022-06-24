@@ -1,20 +1,22 @@
 package shpp.myapplication.colivery.presentation.auth
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,17 +44,26 @@ fun AuthComposable(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
+            val focus by remember {
+                mutableStateOf(false)
+            }
             EmailTextField(
                 emailState = viewModel.emailLiveData.observeAsState(),
                 errorState = viewModel.emailError.observeAsState(),
                 modifier = Modifier.fillMaxWidth(),
-                onChange = { viewModel.onEmailChange(it) }
+                onChange = { viewModel.onEmailChange(it) },
+                onUnfocus = {
+                    viewModel.unfocus()
+                    viewModel.onEmailChange()
+                },
+                onFocus = { viewModel.emailWasFocused = true }
             )
             PasswordTextField(
                 passwordState = viewModel.passwordLiveData.observeAsState(),
                 errorState = viewModel.passwordError.observeAsState(),
                 onChange = { viewModel.onPasswordChange(it) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onUnfocus = { viewModel.passwordFocusLost = true }
             )
             Spacer(modifier = Modifier.height(8.dp))
             AuthButton(
@@ -98,13 +109,31 @@ private fun EmailTextField(
     emailState: State<String?>,
     errorState: State<Boolean?>,
     onChange: (String) -> Unit,
+    onUnfocus: () -> Unit,
+    onFocus: () -> Unit,
     modifier: Modifier
 ) {
     val input by remember { emailState }
+    val focusRequester = remember { FocusRequester() }
+
     Column(modifier = modifier) {
         OutlinedTextField(
             value = input ?: "",
-            modifier = modifier.semantics { contentDescription = "email input" },
+            modifier = modifier
+                .semantics { contentDescription = "email input" }
+                .onFocusChanged {
+                    Log.d("EmailTextField", "$it")
+                    if (it.isFocused) {
+                        onFocus()
+                        Log.d("EmailTextField", "!!!!onFocus!!!!!")
+                    }
+                    if (!it.hasFocus) {
+                        onUnfocus()
+                        Log.d("EmailTextField", "!!!!onUnfocus!!!!")
+                    }
+                }
+                .focusRequester(focusRequester)
+                .clickable { },
             onValueChange = onChange,
             label = { Text(text = "Email") },
             isError = errorState.value ?: false
@@ -124,12 +153,19 @@ private fun PasswordTextField(
     passwordState: State<String?>,
     errorState: State<Boolean?>,
     onChange: (String) -> Unit,
+    onUnfocus: () -> Unit,
     modifier: Modifier
 ) {
     Column(modifier = modifier) {
         OutlinedTextField(
             value = passwordState.value ?: "",
-            modifier = modifier.semantics { contentDescription = "password input" },
+            modifier = modifier
+                .semantics { contentDescription = "password input" }
+                .onFocusChanged {
+                    if (!it.isFocused) {
+                        onUnfocus()
+                    }
+                },
             onValueChange = onChange,
             label = { Text(text = "Password") },
             isError = errorState.value ?: false

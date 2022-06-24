@@ -8,7 +8,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import shpp.myapplication.colivery.R
 import javax.inject.Inject
 
@@ -19,19 +18,27 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         const val PASSWORD_LENGTH = 8
     }
 
+    var emailFocusLost = false
+    var emailWasFocused = false
+
+    var passwordWasFocused = false
+    var passwordFocusLost = false
+
     var state by mutableStateOf(AuthState.SIGN_UP)
+
     val emailLiveData = MutableLiveData("")
     val emailError = MediatorLiveData<Boolean>().apply {
-        addSource(emailLiveData) {
-            value = !android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
-                    && emailLiveData.value!!.isNotEmpty()
+        addSource(emailLiveData) { email ->
+            value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                    && emailFocusLost && emailWasFocused
         }
     }
 
     var passwordLiveData = MutableLiveData("")
     val passwordError = MediatorLiveData<Boolean>().apply {
-        addSource(passwordLiveData) {
-            value = it.length in 1 until PASSWORD_LENGTH
+        addSource(passwordLiveData) { password ->
+            value = password.length in 0 until PASSWORD_LENGTH
+                    && passwordFocusLost
         }
     }
 
@@ -43,7 +50,13 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun onEmailChange(input: String) {
+    fun unfocus() {
+        if (emailWasFocused) {
+            emailFocusLost = true
+        }
+    }
+
+    fun onEmailChange(input: String = emailLiveData.value!!) {
         emailLiveData.value = input
     }
 
