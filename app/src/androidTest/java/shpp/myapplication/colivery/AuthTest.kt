@@ -66,7 +66,7 @@ class AuthTest {
     }
 
     @Test
-    fun invalidEmail() {
+    fun unFocusInvalidEmail() {
         emailError().assertDoesNotExist()
         emailTextInput().performTextInput("email")
         emailError().assertDoesNotExist()
@@ -75,9 +75,25 @@ class AuthTest {
     }
 
     @Test
-    fun invalidPassword() {
+    fun unFocusInvalidPassword() {
+        passwordError().assertDoesNotExist()
         passwordTextInput().performTextInput("pass")
-        //then
+        passwordError().assertDoesNotExist()
+        emailTextInput().performClick()
+        passwordError().assertIsDisplayed()
+    }
+
+    @Test
+    fun signUpInvalidEmail() {
+        emailTextInput().performTextInput("email")
+        authActionButton().performClick()
+        emailError().assertIsDisplayed()
+    }
+
+    @Test
+    fun signUpInvalidPassword() {
+        passwordTextInput().performTextInput("pass")
+        authActionButton().performClick()
         passwordError().assertIsDisplayed()
     }
 
