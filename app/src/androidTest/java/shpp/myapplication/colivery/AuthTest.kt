@@ -67,8 +67,10 @@ class AuthTest {
 
     @Test
     fun invalidEmail() {
+        emailError().assertDoesNotExist()
         emailTextInput().performTextInput("email")
-        //then
+        emailError().assertDoesNotExist()
+        passwordTextInput().performClick()
         emailError().assertIsDisplayed()
     }
 
