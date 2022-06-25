@@ -40,12 +40,9 @@ fun AuthComposable(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            val focus by remember {
-                mutableStateOf(false)
-            }
             AuthTextField(
-                emailState = viewModel.emailLiveData.observeAsState(),
-                errorState = viewModel.emailError.observeAsState(),
+                inputState = viewModel.email,
+                errorState = viewModel.emailError,
                 onChange = { viewModel.onEmailChange(it) },
                 onUnfocus = { viewModel.emailUnfocus() },
                 onFocus = { viewModel.emailWasFocused = true },
@@ -53,7 +50,7 @@ fun AuthComposable(
                 modifier = Modifier.fillMaxWidth()
             )
             AuthTextField(
-                emailState = viewModel.passwordLiveData.observeAsState(),
+                inputState = viewModel.passwordLiveData.observeAsState(),
                 errorState = viewModel.passwordError.observeAsState(),
                 onChange = { viewModel.onPasswordChange(it) },
                 onUnfocus = { viewModel.passwordUnfocus() },
@@ -69,7 +66,7 @@ fun AuthComposable(
                 onClick = {
                     if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
                         if (viewModel.validate()) {
-                            navController.navigate("registrationScreen/${viewModel.emailLiveData.value}/${viewModel.passwordLiveData.value}")
+                            navController.navigate("registrationScreen/${viewModel.email.value}/${viewModel.passwordLiveData.value}")
                         }
                     } else {
                         context.startActivity(Intent(context, MainActivity::class.java))
@@ -104,7 +101,7 @@ fun AuthComposable(
 
 @Composable
 private fun AuthTextField(
-    emailState: State<String?>,
+    inputState: State<String?>,
     errorState: State<Boolean?>,
     onChange: (String) -> Unit,
     onUnfocus: () -> Unit,
@@ -112,7 +109,7 @@ private fun AuthTextField(
     modifier: Modifier,
     label: String,
 ) {
-    val input by remember { emailState }
+    val input by remember { inputState }
 
     Column(modifier = modifier) {
         OutlinedTextField(
