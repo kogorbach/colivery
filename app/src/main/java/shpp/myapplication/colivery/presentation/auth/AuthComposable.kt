@@ -9,9 +9,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -43,8 +40,8 @@ fun AuthComposable(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             AuthTextField(
-                inputState = viewModel.email,
-                errorState = viewModel.emailError,
+                input = viewModel.email.value,
+                error = viewModel.emailError.value,
                 onChange = { viewModel.onEmailChange(it) },
                 onUnfocus = { viewModel.emailUnfocus() },
                 onFocus = { viewModel.emailWasFocused = true },
@@ -52,8 +49,8 @@ fun AuthComposable(
                 modifier = Modifier.fillMaxWidth()
             )
             AuthTextField(
-                inputState = viewModel.password,
-                errorState = viewModel.passwordError,
+                input = viewModel.password.value,
+                error = viewModel.passwordError.value,
                 onChange = { viewModel.onPasswordChange(it) },
                 onUnfocus = { viewModel.passwordUnfocus() },
                 onFocus = { viewModel.passwordWasFocused = true },
@@ -103,19 +100,18 @@ fun AuthComposable(
 
 @Composable
 private fun AuthTextField(
-    inputState: State<String?>,
-    errorState: State<Boolean?>,
+    input: String,
+    error: Boolean,
     onChange: (String) -> Unit,
     onUnfocus: () -> Unit,
     onFocus: () -> Unit,
     modifier: Modifier,
     label: String,
 ) {
-    val input by remember { inputState }
 
     Column(modifier = modifier) {
         OutlinedTextField(
-            value = input ?: "",
+            value = input,
             modifier = modifier
                 .semantics { contentDescription = "$label input" }
                 .onFocusChanged {
@@ -128,10 +124,10 @@ private fun AuthTextField(
                 },
             onValueChange = onChange,
             label = { Text(text = label) },
-            isError = errorState.value ?: false
+            isError = error
         )
 
-        if (errorState.value == true) {
+        if (error) {
             Text(
                 text = "invalid $label",
                 color = MaterialTheme.colors.error,
