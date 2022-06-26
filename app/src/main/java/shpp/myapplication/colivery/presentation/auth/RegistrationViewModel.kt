@@ -1,10 +1,8 @@
 package shpp.myapplication.colivery.presentation.auth
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import shpp.myapplication.colivery.utils.InputValidator
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,32 +12,19 @@ class RegistrationViewModel @Inject constructor() : ViewModel() {
         const val TELEGRAM_MIN_LENGTH = 5
     }
 
-    var nicknameState = mutableStateOf("")
-    val telegramLiveData = MutableLiveData("")
-    val telegramError = MediatorLiveData<String?>().apply {
-        addSource(telegramLiveData) {
-            value = if (it.length < TELEGRAM_MIN_LENGTH) {
-                "telegram must be at least $TELEGRAM_MIN_LENGTH characters long"
-            } else {
-                null
-            }
+    val nicknameValidator = object: InputValidator() {
+        override fun checkError(query: String): Boolean {
+            return query.isNotEmpty()
         }
     }
 
-    private var telegramInputStarted = false
-    private var nickNameInputStarted = false
+    val telegramValidator = object: InputValidator() {
+        override fun checkError(query: String): Boolean {
+            return query.length >= TELEGRAM_MIN_LENGTH
+        }
+    }
 
     fun signUp(email: String?, password: String?) {
         //todo implement
-    }
-
-    fun onNickNameChange(input: String) {
-        nickNameInputStarted = true
-        nicknameState.value = input
-    }
-
-    fun onTelegramChange(input: String) {
-        telegramInputStarted = true
-        telegramLiveData.value = input
     }
 }

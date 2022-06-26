@@ -32,15 +32,14 @@ fun RegistrationComposable(email: String?, password: String?) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-            val nickname by remember { viewModel.nicknameState }
             NicknameTextField(
-                nickname = nickname,
-                onValueChange = { viewModel.onNickNameChange(it) }
+                nickname = viewModel.nicknameValidator.input.value,
+                onValueChange = { viewModel.nicknameValidator.onInputChange(it) }
             )
             TelegramTextField(
-                telegram = viewModel.telegramLiveData.observeAsState(),
-                error = viewModel.telegramError.observeAsState(),
-                onValueChange = { viewModel.onTelegramChange(it) }
+                telegram = viewModel.telegramValidator.input.value,
+                error = viewModel.telegramValidator.error.value,
+                onValueChange = { viewModel.telegramValidator.onInputChange(it) }
             )
         }
         Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
@@ -53,13 +52,13 @@ fun RegistrationComposable(email: String?, password: String?) {
 
 @Composable
 fun TelegramTextField(
-    telegram: State<String?>,
-    error: State<String?>,
+    telegram: String,
+    error: Boolean,
     onValueChange: (String) -> Unit
 ) {
     Column {
         OutlinedTextField(
-            value = telegram.value ?: "",
+            value = telegram,
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,12 +70,12 @@ fun TelegramTextField(
                 )
             },
             label = { Text(text = "Telegram nickname") },
-            isError = error.value != null
+            isError = error
         )
 
-        if (error.value != null) {
+        if (error) {
             Text(
-                text = error.value!!,
+                text = "invalid telegram nickname",
                 color = MaterialTheme.colors.error,
                 modifier = Modifier.semantics { contentDescription = "telegramError" })
         }
