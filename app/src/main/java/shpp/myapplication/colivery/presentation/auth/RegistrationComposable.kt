@@ -7,12 +7,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -34,17 +31,26 @@ fun RegistrationComposable(email: String?, password: String?) {
         Column {
             NicknameTextField(
                 nickname = viewModel.nicknameValidator.input.value,
-                onValueChange = { viewModel.nicknameValidator.onInputChange(it) }
+                error = viewModel.nicknameValidator.error.value,
+                onValueChange = { viewModel.nicknameValidator.onInputChange(it) },
+                onFocus = { viewModel.nicknameValidator.onFocus() },
+                onUnfocus = { viewModel.nicknameValidator.onUnfocus() }
             )
             TelegramTextField(
                 telegram = viewModel.telegramValidator.input.value,
                 error = viewModel.telegramValidator.error.value,
-                onValueChange = { viewModel.telegramValidator.onInputChange(it) }
+                onValueChange = { viewModel.telegramValidator.onInputChange(it) },
+                onFocus = { viewModel.telegramValidator.onFocus() },
+                onUnfocus = { viewModel.telegramValidator.onUnfocus() }
             )
         }
-        Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-            viewModel.signUp(email, password)
-        }) {
+        Button(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .semantics { contentDescription = "completeButton" },
+            onClick = {
+                viewModel.signUp(email, password)
+            }) {
             Text(text = "Complete")
         }
     }
@@ -54,7 +60,9 @@ fun RegistrationComposable(email: String?, password: String?) {
 fun TelegramTextField(
     telegram: String,
     error: Boolean,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    onFocus: () -> Unit,
+    onUnfocus: () -> Unit
 ) {
     Column {
         OutlinedTextField(
@@ -62,7 +70,15 @@ fun TelegramTextField(
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "telegram" },
+                .semantics { contentDescription = "telegram" }
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        onFocus()
+                    }
+                    if (!it.hasFocus) {
+                        onUnfocus()
+                    }
+                },
             leadingIcon = {
                 Image(
                     painter = painterResource(id = R.drawable.ic_telegram),
@@ -83,19 +99,33 @@ fun TelegramTextField(
 }
 
 @Composable
-fun NicknameTextField(nickname: String, onValueChange: (String) -> Unit) {
+fun NicknameTextField(
+    nickname: String,
+    error: Boolean,
+    onValueChange: (String) -> Unit,
+    onFocus: () -> Unit,
+    onUnfocus: () -> Unit
+) {
     Column {
         OutlinedTextField(
             value = nickname,
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "nickname" },
+                .semantics { contentDescription = "nickname" }
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        onFocus()
+                    }
+                    if (!it.hasFocus) {
+                        onUnfocus()
+                    }
+                },
             label = { Text(text = "Nickname") },
-            isError = nickname.isEmpty()
+            isError = error
         )
 
-        if (nickname.isEmpty()) {
+        if (error) {
             Text(
                 text = "nickname cannot be empty",
                 color = MaterialTheme.colors.error,

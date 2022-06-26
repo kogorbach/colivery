@@ -66,4 +66,8 @@ class RegistrationTest {
     private fun nicknameError(): SemanticsNodeInteraction {
         return composeTestRule.onNode(hasContentDescription("nicknameError"))
     }
+
+    private fun completeButton(): SemanticsNodeInteraction {
+        return composeTestRule.onNode(hasContentDescription("completeButton"))
+    }
 }

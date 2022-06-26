@@ -14,13 +14,13 @@ class RegistrationViewModel @Inject constructor() : ViewModel() {
 
     val nicknameValidator = object: InputValidator() {
         override fun checkError(query: String): Boolean {
-            return query.isNotEmpty()
+            return query.isEmpty()
         }
     }
 
     val telegramValidator = object: InputValidator() {
         override fun checkError(query: String): Boolean {
-            return query.length >= TELEGRAM_MIN_LENGTH
+            return query.length < TELEGRAM_MIN_LENGTH
         }
     }
 
