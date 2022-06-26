@@ -8,8 +8,10 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -50,8 +52,8 @@ fun AuthComposable(
                 modifier = Modifier.fillMaxWidth()
             )
             AuthTextField(
-                inputState = viewModel.passwordLiveData.observeAsState(),
-                errorState = viewModel.passwordError.observeAsState(),
+                inputState = viewModel.password,
+                errorState = viewModel.passwordError,
                 onChange = { viewModel.onPasswordChange(it) },
                 onUnfocus = { viewModel.passwordUnfocus() },
                 onFocus = { viewModel.passwordWasFocused = true },
@@ -66,7 +68,7 @@ fun AuthComposable(
                 onClick = {
                     if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
                         if (viewModel.validate()) {
-                            navController.navigate("registrationScreen/${viewModel.email.value}/${viewModel.passwordLiveData.value}")
+                            navController.navigate("registrationScreen/${viewModel.email.value}/${viewModel.password.value}")
                         }
                     } else {
                         context.startActivity(Intent(context, MainActivity::class.java))

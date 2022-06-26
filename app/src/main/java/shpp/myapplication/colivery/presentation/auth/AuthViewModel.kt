@@ -4,8 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import shpp.myapplication.colivery.R
@@ -29,13 +27,8 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     val email = mutableStateOf("")
     val emailError = mutableStateOf(false)
 
-    var passwordLiveData = MutableLiveData("")
-    val passwordError = MediatorLiveData<Boolean>().apply {
-        addSource(passwordLiveData) { password ->
-            value = password.length in 0 until PASSWORD_LENGTH
-                    && passwordFocusLost
-        }
-    }
+    val password = mutableStateOf("")
+    val passwordError = mutableStateOf(false)
 
     fun changeState() {
         state = if (state == AuthState.SIGN_IN) {
@@ -62,7 +55,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     fun validate(): Boolean {
         emailUnfocus(forced = true)
         passwordUnfocus(forced = true)
-        return passwordError.value == false && !emailError.value
+        return !passwordError.value && !emailError.value
     }
 
     fun onEmailChange(input: String = email.value) {
@@ -71,8 +64,10 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                 && emailFocusLost
     }
 
-    fun onPasswordChange(input: String = passwordLiveData.value!!) {
-        passwordLiveData.value = input
+    fun onPasswordChange(input: String = password.value) {
+        password.value = input
+        passwordError.value = password.value.length in 0 until PASSWORD_LENGTH
+                && passwordFocusLost
     }
 
     fun signInWithGoogle() {
