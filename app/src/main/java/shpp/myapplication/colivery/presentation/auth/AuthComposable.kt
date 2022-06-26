@@ -40,20 +40,20 @@ fun AuthComposable(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             AuthTextField(
-                input = viewModel.email.value,
-                error = viewModel.emailError.value,
-                onChange = { viewModel.onEmailChange(it) },
-                onUnfocus = { viewModel.emailUnfocus() },
-                onFocus = { viewModel.emailWasFocused = true },
+                input = viewModel.emailValidator.input.value,
+                error = viewModel.emailValidator.error.value,
+                onChange = { viewModel.emailValidator.onInputChange(it) },
+                onUnfocus = { viewModel.emailValidator.onUnfocus() },
+                onFocus = { viewModel.emailValidator.onFocus() },
                 label = "email",
                 modifier = Modifier.fillMaxWidth()
             )
             AuthTextField(
-                input = viewModel.password.value,
-                error = viewModel.passwordError.value,
-                onChange = { viewModel.onPasswordChange(it) },
-                onUnfocus = { viewModel.passwordUnfocus() },
-                onFocus = { viewModel.passwordWasFocused = true },
+                input = viewModel.passwordValidator.input.value,
+                error = viewModel.passwordValidator.error.value,
+                onChange = { viewModel.passwordValidator.onInputChange(it) },
+                onUnfocus = { viewModel.passwordValidator.onUnfocus() },
+                onFocus = { viewModel.passwordValidator.onFocus() },
                 label = "password",
                 modifier = Modifier.fillMaxWidth()
             )
@@ -65,7 +65,7 @@ fun AuthComposable(
                 onClick = {
                     if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
                         if (viewModel.validate()) {
-                            navController.navigate("registrationScreen/${viewModel.email.value}/${viewModel.password.value}")
+                            navController.navigate("registrationScreen/${viewModel.emailValidator.input.value}/${viewModel.passwordValidator.input.value}")
                         }
                     } else {
                         context.startActivity(Intent(context, MainActivity::class.java))

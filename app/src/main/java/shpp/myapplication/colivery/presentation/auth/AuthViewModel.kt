@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import shpp.myapplication.colivery.R
+import shpp.myapplication.colivery.utils.InputValidator
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,19 +17,19 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         const val PASSWORD_LENGTH = 8
     }
 
-    var emailFocusLost = false
-    var emailWasFocused = false
+    val emailValidator = object : InputValidator() {
+        override fun checkError(query: String): Boolean {
+            return !android.util.Patterns.EMAIL_ADDRESS.matcher(query).matches()
+        }
+    }
 
-    var passwordWasFocused = false
-    var passwordFocusLost = false
+    val passwordValidator = object : InputValidator() {
+        override fun checkError(query: String): Boolean {
+            return query.length in 0 until PASSWORD_LENGTH
+        }
+    }
 
     var state by mutableStateOf(AuthState.SIGN_UP)
-
-    val email = mutableStateOf("")
-    val emailError = mutableStateOf(false)
-
-    val password = mutableStateOf("")
-    val passwordError = mutableStateOf(false)
 
     fun changeState() {
         state = if (state == AuthState.SIGN_IN) {
@@ -38,36 +39,10 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun emailUnfocus(forced: Boolean = false) {
-        if (emailWasFocused || forced) {
-            emailFocusLost = true
-            onEmailChange()
-        }
-    }
-
-    fun passwordUnfocus(forced: Boolean = false) {
-        if (passwordWasFocused || forced) {
-            passwordFocusLost = true
-            onPasswordChange()
-        }
-    }
-
     fun validate(): Boolean {
-        emailUnfocus(forced = true)
-        passwordUnfocus(forced = true)
-        return !passwordError.value && !emailError.value
-    }
-
-    fun onEmailChange(input: String = email.value) {
-        email.value = input
-        emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
-                && emailFocusLost
-    }
-
-    fun onPasswordChange(input: String = password.value) {
-        password.value = input
-        passwordError.value = password.value.length in 0 until PASSWORD_LENGTH
-                && passwordFocusLost
+        emailValidator.validate()
+        passwordValidator.validate()
+        return !passwordValidator.error.value && !emailValidator.error.value
     }
 
     fun signInWithGoogle() {
