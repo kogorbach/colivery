@@ -1,6 +1,7 @@
 package shpp.myapplication.colivery.presentation.auth
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -68,8 +69,14 @@ fun AuthComposable(
                             navController.navigate("registrationScreen/${viewModel.emailValidator.input.value}/${viewModel.passwordValidator.input.value}")
                         }
                     } else {
-                        context.startActivity(Intent(context, MainActivity::class.java))
-                        // TODO add firebase authentication [by ratrider:]
+                        viewModel.signIn(
+                            onSuccess = {
+                                context.startActivity(Intent(context, MainActivity::class.java))
+                            },
+                            onFailure = {
+                                Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT)
+                                    .show()
+                            })
                     }
                 }
             )
@@ -148,7 +155,7 @@ private fun AuthButton(
             onClick()
         }
     ) {
-        Text(authState.text.authAction)
+        Text(authState.authAction)
     }
 }
 
@@ -163,7 +170,7 @@ private fun ChangeAuthActionText(
         modifier = modifier,
         text = AnnotatedString(
             stringResource(
-                id = state.text.changeAuthAction
+                id = state.changeAuthAction
             )
         ),
         onClick = {

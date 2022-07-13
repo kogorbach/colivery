@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    firebase: FirebaseService
+    private val firebase: FirebaseService
 ) : ViewModel() {
 
     companion object {
@@ -48,17 +48,22 @@ class AuthViewModel @Inject constructor(
         return !passwordValidator.error.value && !emailValidator.error.value
     }
 
+    fun signIn(onSuccess: () -> Unit, onFailure: () -> Unit) {
+        firebase.signIn(emailValidator.input.value, passwordValidator.input.value, onSuccess = {
+            if (it.isSuccessful) {
+                onSuccess()
+            } else {
+                onFailure()
+            }
+        })
+    }
+
     fun signInWithGoogle() {
-
+        // todo implement [by ratrider:]
     }
 
-    enum class AuthState(val text: AuthStateText) {
-        SIGN_IN(AuthStateText("Sign in", R.string.newToTheApp)),
-        SIGN_UP(AuthStateText("Sign up", R.string.alreadyHaveAccount))
+    enum class AuthState(val authAction: String, @StringRes val changeAuthAction: Int) {
+        SIGN_IN("Sign in", R.string.newToTheApp),
+        SIGN_UP("Sign up", R.string.alreadyHaveAccount)
     }
-
-    data class AuthStateText(
-        val authAction: String,
-        @StringRes val changeAuthAction: Int
-    )
 }
