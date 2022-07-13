@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "923924835558",
+    "project_id": "colivery-666f2",
+    "storage_bucket": "colivery-666f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923924835558:android:be1b7642c7e488034c1f27",
+        "android_client_info": {
+          "package_name": "shpp.myapplication.colivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923924835558-7i1f0633sqkf3a0ktvha9hoikc3htibq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6sWQfF1B1Z9gDsJZX9SbnsHK3x7WOvL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923924835558-7i1f0633sqkf3a0ktvha9hoikc3htibq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

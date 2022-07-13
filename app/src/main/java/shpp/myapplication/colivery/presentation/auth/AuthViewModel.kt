@@ -7,11 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import shpp.myapplication.colivery.R
+import shpp.myapplication.colivery.data.FirebaseService
 import shpp.myapplication.colivery.utils.InputValidator
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel() {
+class AuthViewModel @Inject constructor(
+    firebase: FirebaseService
+) : ViewModel() {
 
     companion object {
         const val PASSWORD_LENGTH = 8
