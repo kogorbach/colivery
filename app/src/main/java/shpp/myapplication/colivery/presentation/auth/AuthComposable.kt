@@ -31,7 +31,7 @@ import shpp.myapplication.colivery.presentation.MainActivity
 fun AuthComposable(
     navController: NavController = rememberNavController()
 ) {
-    val viewModel = viewModel(AuthViewModel::class.java)
+    val viewModel: AuthViewModel = viewModel()
     val context = LocalContext.current
     Column(
         modifier = Modifier
