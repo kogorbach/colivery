@@ -7,13 +7,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import shpp.myapplication.colivery.R
-import shpp.myapplication.colivery.data.FirebaseService
+import shpp.myapplication.colivery.data.FirebaseRepositoryImpl
 import shpp.myapplication.colivery.utils.InputValidator
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val firebase: FirebaseService
+    private val firebase: FirebaseRepositoryImpl
 ) : ViewModel() {
 
     companion object {
@@ -48,12 +48,12 @@ class AuthViewModel @Inject constructor(
         return !passwordValidator.error.value && !emailValidator.error.value
     }
 
-    fun signIn(onSuccess: () -> Unit, onFailure: () -> Unit) {
+    fun signIn(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         firebase.signIn(emailValidator.input.value, passwordValidator.input.value, onSuccess = {
             if (it.isSuccessful) {
                 onSuccess()
             } else {
-                onFailure()
+                onFailure(it.exception?.message.toString())
             }
         })
     }

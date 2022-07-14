@@ -4,10 +4,11 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import shpp.myapplication.colivery.domain.repo.FirebaseRepository
 import shpp.myapplication.colivery.utils.ext.usersCollection
 import javax.inject.Inject
 
-class FirebaseService @Inject constructor() {
+class FirebaseRepositoryImpl @Inject constructor(): FirebaseRepository {
 
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()

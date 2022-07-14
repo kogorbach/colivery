@@ -4,7 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
-import shpp.myapplication.colivery.data.FirebaseService
+import shpp.myapplication.colivery.data.FirebaseRepositoryImpl
 import javax.inject.Singleton
 
 @Module
@@ -13,6 +13,6 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun bindFirebase(
-        firebaseService: FirebaseService
-    ): FirebaseService
+        firebaseService: FirebaseRepositoryImpl
+    ): FirebaseRepositoryImpl
 }

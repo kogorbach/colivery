@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -31,8 +32,9 @@ import shpp.myapplication.colivery.presentation.MainActivity
 fun AuthComposable(
     navController: NavController = rememberNavController()
 ) {
-    val viewModel: AuthViewModel = viewModel()
+    val viewModel: AuthViewModel = hiltViewModel()
     val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,8 +75,8 @@ fun AuthComposable(
                             onSuccess = {
                                 context.startActivity(Intent(context, MainActivity::class.java))
                             },
-                            onFailure = {
-                                Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT)
+                            onFailure = { message ->
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT)
                                     .show()
                             })
                     }
