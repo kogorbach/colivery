@@ -1,12 +1,12 @@
 package shpp.myapplication.colivery.presentation.auth
 
+import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,11 +22,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import shpp.myapplication.colivery.R
 import shpp.myapplication.colivery.presentation.MainActivity
+import shpp.myapplication.colivery.utils.InputValidator
 
 @Composable
 fun AuthComposable(
@@ -43,20 +43,12 @@ fun AuthComposable(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             AuthTextField(
-                input = viewModel.emailValidator.input.value,
-                error = viewModel.emailValidator.error.value,
-                onChange = { viewModel.emailValidator.onInputChange(it) },
-                onUnfocus = { viewModel.emailValidator.onUnfocus() },
-                onFocus = { viewModel.emailValidator.onFocus() },
+                validator = viewModel.emailValidator,
                 label = "email",
                 modifier = Modifier.fillMaxWidth()
             )
             AuthTextField(
-                input = viewModel.passwordValidator.input.value,
-                error = viewModel.passwordValidator.error.value,
-                onChange = { viewModel.passwordValidator.onInputChange(it) },
-                onUnfocus = { viewModel.passwordValidator.onUnfocus() },
-                onFocus = { viewModel.passwordValidator.onFocus() },
+                validator = viewModel.passwordValidator,
                 label = "password",
                 modifier = Modifier.fillMaxWidth()
             )
@@ -74,6 +66,7 @@ fun AuthComposable(
                         viewModel.signIn(
                             onSuccess = {
                                 context.startActivity(Intent(context, MainActivity::class.java))
+                                (context as Activity).finish()
                             },
                             onFailure = { message ->
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT)
@@ -108,40 +101,26 @@ fun AuthComposable(
 }
 
 @Composable
-private fun AuthTextField(
-    input: String,
-    error: Boolean,
-    onChange: (String) -> Unit,
-    onUnfocus: () -> Unit,
-    onFocus: () -> Unit,
-    modifier: Modifier,
-    label: String,
-) {
-
+private fun AuthTextField(validator: InputValidator, label: String, modifier: Modifier) {
     Column(modifier = modifier) {
         OutlinedTextField(
-            value = input,
+            value = validator.input.value,
             modifier = modifier
                 .semantics { contentDescription = "$label input" }
                 .onFocusChanged {
                     if (it.isFocused) {
-                        onFocus()
+                        validator.onFocus()
                     }
                     if (!it.hasFocus) {
-                        onUnfocus()
+                        validator.onUnfocus()
                     }
                 },
-            onValueChange = onChange,
+            onValueChange = {
+                validator.onInputChange(it)
+            },
             label = { Text(text = label) },
-            isError = error
+            isError = validator.error.value
         )
-
-        if (error) {
-            Text(
-                text = "invalid $label",
-                color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "$label error" })
-        }
     }
 }
 

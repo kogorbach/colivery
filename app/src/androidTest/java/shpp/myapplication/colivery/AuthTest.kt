@@ -25,6 +25,9 @@ import shpp.myapplication.colivery.presentation.auth.RegistrationComposable
 @RunWith(AndroidJUnit4::class)
 class AuthTest {
 
+    val email = "test@test.test"
+    val password = "password"
+
     @get:Rule(order = 0)
     val composeTestRule = createComposeRule()
     lateinit var navController: NavHostController
