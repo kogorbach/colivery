@@ -1,9 +1,10 @@
-package shpp.myapplication.colivery.data
+package shpp.myapplication.colivery.data.network
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import shpp.myapplication.colivery.data.UserModel
 import shpp.myapplication.colivery.utils.ext.usersCollection
 import javax.inject.Inject
 

@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import shpp.myapplication.colivery.R
-import shpp.myapplication.colivery.data.FirebaseService
+import shpp.myapplication.colivery.data.network.FirebaseService
 import shpp.myapplication.colivery.utils.InputValidator
 import javax.inject.Inject
 
