@@ -4,6 +4,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 
 abstract class InputValidator {
+
+    companion object {
+        // for previews
+        fun mockValidator() = object: InputValidator() {
+            override fun checkError(query: String): Boolean {
+                return false
+            }
+        }
+    }
+
     var input = mutableStateOf("")
     var error = mutableStateOf(false)
 

@@ -1,20 +1,17 @@
 package shpp.myapplication.colivery
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import shpp.myapplication.colivery.presentation.auth.AuthComposable
-import shpp.myapplication.colivery.presentation.auth.RegistrationComposable
+import shpp.myapplication.colivery.utils.InputValidator
+import shpp.myapplication.colivery.utils.Semantics
 
 
 /**
@@ -27,28 +24,14 @@ class AuthTest {
 
     @get:Rule(order = 0)
     val composeTestRule = createComposeRule()
-    lateinit var navController: NavHostController
 
     @Before
     fun init() {
         composeTestRule.setContent {
-            navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "authScreen") {
-                composable("authScreen") {
-                    AuthComposable(navController)
-                }
-                composable(
-                    "registrationScreen/{email}/{password}",
-                    arguments = listOf(
-                        navArgument("email") { type = NavType.StringType },
-                        navArgument("password") { type = NavType.StringType })
-                ) {
-                    RegistrationComposable(
-                        it.arguments?.getString("email"),
-                        it.arguments?.getString("password")
-                    )
-                }
-            }
+            AuthComposable(
+                emailValidator = InputValidator.mockValidator(),
+                passwordValidator = InputValidator.mockValidator()
+            )
         }
     }
 
@@ -68,7 +51,7 @@ class AuthTest {
     @Test
     fun unFocusInvalidEmail() {
         emailError().assertDoesNotExist()
-        emailTextInput().performTextInput("email")
+        emailTextInput().performTextInput("emawil")
         emailError().assertDoesNotExist()
         passwordTextInput().performClick()
         emailError().assertIsDisplayed()
@@ -154,11 +137,11 @@ class AuthTest {
     }
 
     private fun changeActionText(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("change auth action"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.AUTH_CHANGE_OPTION))
     }
 
     private fun authActionButton(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("auth action button"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.AUTH_BUTTON))
     }
 
     private fun emailTextInput(): SemanticsNodeInteraction {
@@ -178,6 +161,6 @@ class AuthTest {
     }
 
     private fun mainActivity(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("mainActivity"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.MAIN_ACTIVITY))
     }
 }

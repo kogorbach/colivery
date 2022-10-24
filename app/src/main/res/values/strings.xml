@@ -2,4 +2,10 @@
     <string name="app_name">colivery</string>
     <string name="alreadyHaveAccount">Already have an account? Sign in</string>
     <string name="newToTheApp">New to the app? Sign up</string>
+    <string name="authenticationFailedToast">Authentication failed</string>
+    <string name="googleAuthText">Sign in with Google</string>
+    <string name="emailInputLabel">email</string>
+    <string name="passwordInputLabel">password</string>
+    <string name="authOrText">OR</string>
+    <string name="authInvalidInput">invalid %s</string>
 </resources>
