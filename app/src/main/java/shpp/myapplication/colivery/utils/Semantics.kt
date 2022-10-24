@@ -1,7 +1,9 @@
 package shpp.myapplication.colivery.utils
 
 object Semantics {
+
     // AuthComposable
+    const val AUTH_COMPOSABLE = "auth composable"
     const val AUTH_BUTTON = "auth action button"
     const val AUTH_CHANGE_OPTION = "change auth action"
     const val GOOGLE_AUTH = "Google auth"

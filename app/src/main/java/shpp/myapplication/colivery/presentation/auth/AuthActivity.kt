@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
+import shpp.myapplication.colivery.utils.Semantics
 
 @AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
@@ -22,8 +23,8 @@ class AuthActivity : ComponentActivity() {
             ColiveryTheme {
                 // A surface container using the 'background' color from the theme
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "authScreen") {
-                    composable("authScreen") {
+                NavHost(navController = navController, startDestination = Semantics.AUTH_COMPOSABLE) {
+                    composable(Semantics.AUTH_COMPOSABLE) {
                         AuthComposable()
                     }
                     composable(
