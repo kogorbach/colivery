@@ -57,8 +57,8 @@ fun AuthComposable(
 //stateless composable
 @Composable
 fun AuthComposable(
-    emailValidator: InputValidator,
-    passwordValidator: InputValidator,
+    emailValidator: InputValidator = InputValidator.mockValidator(),
+    passwordValidator: InputValidator = InputValidator.mockValidator(),
     authState: AuthViewModel.AuthState = AuthViewModel.AuthState.SIGN_IN,
     onAuthButtonClick: () -> Unit = {},
     changeState: () -> Unit = {},

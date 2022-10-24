@@ -1,16 +1,15 @@
 package shpp.myapplication.colivery
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import androidx.annotation.StringRes
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import shpp.myapplication.colivery.presentation.auth.AuthActivity
 import shpp.myapplication.colivery.presentation.auth.AuthComposable
-import shpp.myapplication.colivery.utils.InputValidator
 import shpp.myapplication.colivery.utils.Semantics
 
 
@@ -23,21 +22,18 @@ import shpp.myapplication.colivery.utils.Semantics
 class AuthTest {
 
     @get:Rule(order = 0)
-    val composeTestRule = createComposeRule()
+    val composeTestRule = createAndroidComposeRule<AuthActivity>()
 
-    @Before
-    fun init() {
-        composeTestRule.setContent {
-            AuthComposable(
-                emailValidator = InputValidator.mockValidator(),
-                passwordValidator = InputValidator.mockValidator()
-            )
-        }
-    }
+//    @Before
+//    fun init() {
+//        composeTestRule.setContent {
+//            AuthComposable()
+//        }
+//    }
 
     @Test
     fun initialState() {
-        changeActionText().assertTextEquals("Already have an account? Sign in")
+        changeActionText().assertTextEquals(getString(R.string.newToTheApp))
         authActionButton().assertTextEquals("Sign up")
     }
 
@@ -163,4 +159,9 @@ class AuthTest {
     private fun mainActivity(): SemanticsNodeInteraction {
         return composeTestRule.onNode(hasContentDescription(Semantics.MAIN_ACTIVITY))
     }
+
+    private fun getString(@StringRes id: Int): String {
+        return composeTestRule.activity.getString(id)
+    }
+
 }
