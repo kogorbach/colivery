@@ -11,6 +11,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
+import shpp.myapplication.colivery.utils.Semantics
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
     fun MainContent() {
         Text(
             text = "Main Activity",
-            modifier = Modifier.semantics { contentDescription = "mainActivity" }
+            modifier = Modifier.semantics { contentDescription = Semantics.MAIN_ACTIVITY }
         )
     }
 }

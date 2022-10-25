@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,24 +21,7 @@ class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ColiveryTheme {
-                // A surface container using the 'background' color from the theme
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Semantics.AUTH_COMPOSABLE) {
-                    composable(Semantics.AUTH_COMPOSABLE) {
-                        AuthComposable()
-                    }
-                    composable(
-                        "registrationScreen/{email}/{password}",
-                        arguments = listOf(navArgument("email") { type = NavType.StringType },
-                            navArgument("password") { type = NavType.StringType })
-                    ) {
-                        RegistrationComposable(
-                            it.arguments?.getString("email"), it.arguments?.getString("password")
-                        )
-                    }
-                }
-            }
+            AuthNavHost(rememberNavController())
         }
     }
 
@@ -48,4 +32,27 @@ class AuthActivity : ComponentActivity() {
             AuthComposable()
         }
     }
+
 }
+
+@Composable
+fun AuthNavHost(navController: NavHostController) {
+    ColiveryTheme {
+        // A surface container using the 'background' color from the theme
+        NavHost(navController = navController, startDestination = Semantics.AUTH_COMPOSABLE) {
+            composable(Semantics.AUTH_COMPOSABLE) {
+                AuthComposable()
+            }
+            composable(
+                "registrationScreen/{email}/{password}",
+                arguments = listOf(navArgument("email") { type = NavType.StringType },
+                    navArgument("password") { type = NavType.StringType })
+            ) {
+                RegistrationComposable(
+                    it.arguments?.getString("email"), it.arguments?.getString("password")
+                )
+            }
+        }
+    }
+}
+

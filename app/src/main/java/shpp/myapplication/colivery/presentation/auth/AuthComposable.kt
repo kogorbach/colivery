@@ -56,9 +56,9 @@ fun AuthComposable(
 //stateless composable
 @Composable
 fun AuthComposable(
+    authState: AuthViewModel.AuthState,
     emailValidator: InputValidator = InputValidator.mockValidator(),
     passwordValidator: InputValidator = InputValidator.mockValidator(),
-    authState: AuthViewModel.AuthState = AuthViewModel.AuthState.SIGN_IN,
     onAuthButtonClick: () -> Unit = {},
     changeState: () -> Unit = {},
     signInWithGoogle: () -> Unit = {}
@@ -122,7 +122,6 @@ fun AuthComposable(
         )
     }
 }
-
 
 @Composable
 private fun NormalSpacer() {
@@ -242,7 +241,6 @@ private fun onAuthButtonClick(
 @Composable
 fun PreviewAuth() {
     AuthComposable(
-        emailValidator = InputValidator.mockValidator(),
-        passwordValidator = InputValidator.mockValidator()
+       authState = AuthViewModel.AuthState.SIGN_UP
     )
 }
