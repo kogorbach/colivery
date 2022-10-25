@@ -15,13 +15,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
 import shpp.myapplication.colivery.utils.Semantics
 
+const val EMAIL_NAV_KEY = "email"
+const val PASSWORD_NAV_KEY = "password"
+
 @AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
 
-    companion object {
-        const val EMAIL_NAV_KEY = "email"
-        const val PASSWORD_NAV_KEY = "password"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,9 @@ class AuthActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         ColiveryTheme {
-            AuthComposable()
+            AuthComposable(
+                authState = AuthState.SIGN_UP
+            )
         }
     }
 
@@ -66,13 +67,12 @@ fun AuthNavHost(navController: NavHostController) {
     }
 }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        ColiveryTheme {
-            AuthComposable(
-                authState = AuthState.SIGN_UP
-            )
-        }
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    ColiveryTheme {
+        AuthComposable(
+            authState = AuthState.SIGN_UP
+        )
     }
 }
