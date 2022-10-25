@@ -3,7 +3,6 @@ package shpp.myapplication.colivery
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
@@ -37,9 +36,7 @@ class AuthTest {
     fun init() {
         composeTestRule.setContent {
             AuthComposable(
-                authState = remember {
-                    authState.value
-                },
+                authState = authState.value,
                 changeState = { authState.value = authState.value.changeState() },
                 emailValidator = EmailValidator(),
                 passwordValidator = PasswordValidator()

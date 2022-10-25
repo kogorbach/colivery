@@ -15,10 +15,6 @@ class AuthViewModel @Inject constructor(
     private val firebase: FirebaseService
 ) : ViewModel() {
 
-    companion object {
-        const val PASSWORD_LENGTH = 8
-    }
-
     val emailValidator = EmailValidator()
     val passwordValidator = PasswordValidator()
 

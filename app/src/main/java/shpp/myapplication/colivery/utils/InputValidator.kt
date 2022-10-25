@@ -1,11 +1,11 @@
 package shpp.myapplication.colivery.utils
 
 import androidx.compose.runtime.mutableStateOf
-import shpp.myapplication.colivery.presentation.auth.AuthViewModel
 
 sealed class InputValidator {
 
     companion object {
+        const val PASSWORD_LENGTH = 8
         const val TELEGRAM_MIN_LENGTH = 5
     }
 
@@ -52,17 +52,17 @@ class EmailValidator : InputValidator() {
 
 class PasswordValidator : InputValidator() {
     override fun checkError(query: String): Boolean {
-        return query.length in 0 until AuthViewModel.PASSWORD_LENGTH
+        return query.length in 0 until PASSWORD_LENGTH
     }
 }
 
-class NicknameValidator: InputValidator() {
+class NicknameValidator : InputValidator() {
     override fun checkError(query: String): Boolean {
         return query.isEmpty()
     }
 }
 
-class TelegramValidator: InputValidator() {
+class TelegramValidator : InputValidator() {
     override fun checkError(query: String): Boolean {
         return query.length < TELEGRAM_MIN_LENGTH
     }

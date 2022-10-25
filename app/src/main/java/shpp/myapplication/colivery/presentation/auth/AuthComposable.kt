@@ -10,6 +10,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -24,9 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import shpp.myapplication.colivery.R
 import shpp.myapplication.colivery.presentation.MainActivity
-import shpp.myapplication.colivery.utils.InputValidator
-import shpp.myapplication.colivery.utils.MockValidator
-import shpp.myapplication.colivery.utils.Semantics
+import shpp.myapplication.colivery.utils.*
 import shpp.myapplication.colivery.utils.ext.toast
 
 //stateful composable
@@ -56,9 +56,12 @@ fun AuthComposable(
 @Composable
 fun AuthComposable(
     authState: AuthState,
-    emailValidator: InputValidator = MockValidator(),
-    passwordValidator: InputValidator = MockValidator(),
-    onAuthButtonClick: () -> Unit = {},
+    emailValidator: InputValidator = EmailValidator(),
+    passwordValidator: InputValidator = PasswordValidator(),
+    onAuthButtonClick: () -> Unit = {
+        emailValidator.validate()
+        passwordValidator.validate()
+    },
     changeState: () -> Unit = {},
     signInWithGoogle: () -> Unit = {}
 ) {
