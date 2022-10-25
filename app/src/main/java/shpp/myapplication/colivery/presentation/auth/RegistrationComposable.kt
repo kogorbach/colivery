@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import shpp.myapplication.colivery.R
+import shpp.myapplication.colivery.utils.Semantics
 
 @Composable
 fun RegistrationComposable(email: String?, password: String?) {
@@ -26,7 +27,7 @@ fun RegistrationComposable(email: String?, password: String?) {
         modifier = Modifier
             .fillMaxHeight()
             .padding(horizontal = 8.dp)
-            .semantics { contentDescription = "registration screen" },
+            .semantics { contentDescription = Semantics.REGISTRATION_COMPOSABLE },
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {

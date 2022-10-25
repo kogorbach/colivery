@@ -125,7 +125,6 @@ fun AuthComposable(
     }
 }
 
-
 @Composable
 private fun NormalSpacer() {
     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacerNormal)))
