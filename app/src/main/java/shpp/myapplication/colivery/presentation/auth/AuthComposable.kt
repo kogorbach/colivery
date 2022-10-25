@@ -22,20 +22,19 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import shpp.myapplication.colivery.R
 import shpp.myapplication.colivery.presentation.MainActivity
 import shpp.myapplication.colivery.utils.InputValidator
+import shpp.myapplication.colivery.utils.MockValidator
 import shpp.myapplication.colivery.utils.Semantics
 import shpp.myapplication.colivery.utils.ext.toast
 
 //stateful composable
 @Composable
 fun AuthComposable(
+    onNavigateToMain: (String, String) -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    val navController = rememberNavController()
     val context = LocalContext.current
 
     AuthComposable(
@@ -45,7 +44,7 @@ fun AuthComposable(
         onAuthButtonClick = {
             onAuthButtonClick(
                 viewModel = viewModel,
-                navController = navController,
+                onNavigateToMain = onNavigateToMain,
                 context = context
             )
         },
@@ -56,9 +55,9 @@ fun AuthComposable(
 //stateless composable
 @Composable
 fun AuthComposable(
-    emailValidator: InputValidator = InputValidator.mockValidator(),
-    passwordValidator: InputValidator = InputValidator.mockValidator(),
-    authState: AuthViewModel.AuthState = AuthViewModel.AuthState.SIGN_IN,
+    authState: AuthState,
+    emailValidator: InputValidator = MockValidator(),
+    passwordValidator: InputValidator = MockValidator(),
     onAuthButtonClick: () -> Unit = {},
     changeState: () -> Unit = {},
     signInWithGoogle: () -> Unit = {}
@@ -169,7 +168,7 @@ private fun AuthTextField(
 
 @Composable
 private fun AuthButton(
-    authState: AuthViewModel.AuthState,
+    authState: AuthState,
     modifier: Modifier,
     onClick: () -> Unit
 ) {
@@ -188,7 +187,7 @@ private fun AuthButton(
 private fun ChangeAuthActionText(
     modifier: Modifier,
     onClick: () -> Unit,
-    state: AuthViewModel.AuthState
+    state: AuthState
 ) {
     ClickableText(
         modifier = modifier,
@@ -220,12 +219,15 @@ private fun GoogleAuthButton(modifier: Modifier, onAuthClick: () -> Unit) {
 
 private fun onAuthButtonClick(
     viewModel: AuthViewModel,
-    navController: NavController,
+    onNavigateToMain: (String, String) -> Unit,
     context: Context
 ) {
-    if (viewModel.state == AuthViewModel.AuthState.SIGN_UP) {
+    if (viewModel.state == AuthState.SIGN_UP) {
         if (viewModel.validate()) {
-            navController.navigate("registrationScreen/${viewModel.emailValidator.input.value}/${viewModel.passwordValidator.input.value}")
+            onNavigateToMain(
+                viewModel.emailValidator.input.value,
+                viewModel.passwordValidator.input.value
+            )
         }
     } else {
         viewModel.signIn(
@@ -242,7 +244,6 @@ private fun onAuthButtonClick(
 @Composable
 fun PreviewAuth() {
     AuthComposable(
-        emailValidator = InputValidator.mockValidator(),
-        passwordValidator = InputValidator.mockValidator()
+        authState = AuthState.SIGN_UP
     )
 }

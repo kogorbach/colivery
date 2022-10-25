@@ -1,13 +1,21 @@
 package shpp.myapplication.colivery
 
+import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import shpp.myapplication.colivery.presentation.auth.AuthActivity
+import shpp.myapplication.colivery.presentation.auth.AuthComposable
+import shpp.myapplication.colivery.presentation.auth.AuthState
+import shpp.myapplication.colivery.utils.EmailValidator
+import shpp.myapplication.colivery.utils.PasswordValidator
 import shpp.myapplication.colivery.utils.Semantics
 
 
@@ -20,18 +28,27 @@ import shpp.myapplication.colivery.utils.Semantics
 class AuthTest {
 
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<AuthActivity>()
+    val composeTestRule = createComposeRule()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
 
-//    @Before
-//    fun init() {
-//        composeTestRule.setContent {
-//            AuthComposable()
-//        }
-//    }
+    private var authState = mutableStateOf(AuthState.SIGN_UP)
+
+    @Before
+    fun init() {
+        composeTestRule.setContent {
+            AuthComposable(
+                authState = remember {
+                    authState.value
+                },
+                changeState = { authState.value = authState.value.changeState() },
+                emailValidator = EmailValidator(),
+                passwordValidator = PasswordValidator()
+            )
+        }
+    }
 
     @Test
     fun initialState() {
-        // init state is sign up
         changeActionText.assertTextEquals(getString(R.string.alreadyHaveAccount))
         authActionButton.assertTextEquals("Sign up")
     }
@@ -100,39 +117,9 @@ class AuthTest {
     @Test
     fun emptyFieldsSignup() {
         authActionButton.performClick()
-        //then
+        //then show both errors
         emailError.assertIsDisplayed()
         passwordError.assertIsDisplayed()
-    }
-
-    @Test
-    fun signUp() {
-        emailTextInput.performTextInput("validEmail@gmail.com")
-        passwordTextInput.performTextInput("myp@ssWord23")
-        // then inputs are valid
-        emailError.assertDoesNotExist()
-        passwordError.assertDoesNotExist()
-
-        authActionButton.performClick()
-        // then navigation is performed
-        authComposable.assertIsNotDisplayed()
-        // todo test navigation
-//        composeTestRule.onNode(hasContentDescription("registration screen")).assertIsDisplayed()
-    }
-
-    @Test
-    fun signIn() {
-        changeActionText.performClick()
-        emailTextInput.performTextInput("validEmail@gmail.com")
-        passwordTextInput.performTextInput("myp@ssWord23")
-        // then
-        emailError.assertDoesNotExist()
-        passwordError.assertDoesNotExist()
-        // launch main activity
-        authActionButton.performClick()
-        authComposable.assertIsNotDisplayed()
-        // todo test intent
-//        mainActivity.assertIsDisplayed()
     }
 
     private val changeActionText by lazy {
@@ -159,16 +146,8 @@ class AuthTest {
         composeTestRule.onNode(hasContentDescription("password error"))
     }
 
-    private val authComposable by lazy {
-        composeTestRule.onNode(hasContentDescription(Semantics.AUTH_COMPOSABLE))
-    }
-
-    private val mainActivity by lazy {
-        composeTestRule.onNode(hasContentDescription(Semantics.MAIN_ACTIVITY))
-    }
-
     private fun getString(@StringRes id: Int): String {
-        return composeTestRule.activity.getString(id)
+        return context.getString(id)
     }
 
 }

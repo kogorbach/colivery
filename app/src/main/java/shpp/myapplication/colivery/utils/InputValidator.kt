@@ -1,17 +1,12 @@
 package shpp.myapplication.colivery.utils
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
+import shpp.myapplication.colivery.presentation.auth.AuthViewModel
 
-abstract class InputValidator {
+sealed class InputValidator {
 
     companion object {
-        // for previews
-        fun mockValidator() = object: InputValidator() {
-            override fun checkError(query: String): Boolean {
-                return false
-            }
-        }
+        const val TELEGRAM_MIN_LENGTH = 5
     }
 
     var input = mutableStateOf("")
@@ -41,4 +36,34 @@ abstract class InputValidator {
     }
 
     protected abstract fun checkError(query: String = input.value): Boolean
+}
+
+class MockValidator : InputValidator() {
+    override fun checkError(query: String): Boolean {
+        return false
+    }
+}
+
+class EmailValidator : InputValidator() {
+    override fun checkError(query: String): Boolean {
+        return !android.util.Patterns.EMAIL_ADDRESS.matcher(query).matches()
+    }
+}
+
+class PasswordValidator : InputValidator() {
+    override fun checkError(query: String): Boolean {
+        return query.length in 0 until AuthViewModel.PASSWORD_LENGTH
+    }
+}
+
+class NicknameValidator: InputValidator() {
+    override fun checkError(query: String): Boolean {
+        return query.isEmpty()
+    }
+}
+
+class TelegramValidator: InputValidator() {
+    override fun checkError(query: String): Boolean {
+        return query.length < TELEGRAM_MIN_LENGTH
+    }
 }

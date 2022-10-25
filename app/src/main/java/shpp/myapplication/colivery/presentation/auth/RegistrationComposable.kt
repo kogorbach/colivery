@@ -15,12 +15,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import shpp.myapplication.colivery.R
 
 @Composable
 fun RegistrationComposable(email: String?, password: String?) {
-    val viewModel: RegistrationViewModel = viewModel()
+    val viewModel: RegistrationViewModel = hiltViewModel()
     Column(
         modifier = Modifier
             .fillMaxHeight()

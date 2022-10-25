@@ -17,23 +17,37 @@ import shpp.myapplication.colivery.utils.Semantics
 @AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
 
+    companion object {
+        const val EMAIL_NAV_KEY = "email"
+        const val PASSWORD_NAV_KEY = "password"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ColiveryTheme {
                 // A surface container using the 'background' color from the theme
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Semantics.AUTH_COMPOSABLE) {
+                NavHost(
+                    navController = navController,
+                    startDestination = Semantics.AUTH_COMPOSABLE
+                ) {
                     composable(Semantics.AUTH_COMPOSABLE) {
-                        AuthComposable()
+                        AuthComposable(
+                            onNavigateToMain = { email, password ->
+                                navController.navigate("registrationScreen/$email/$password")
+                            }
+                        )
                     }
                     composable(
                         "registrationScreen/{email}/{password}",
-                        arguments = listOf(navArgument("email") { type = NavType.StringType },
-                            navArgument("password") { type = NavType.StringType })
+                        arguments = listOf(
+                            navArgument(EMAIL_NAV_KEY) { type = NavType.StringType },
+                            navArgument(PASSWORD_NAV_KEY) { type = NavType.StringType })
                     ) {
                         RegistrationComposable(
-                            it.arguments?.getString("email"), it.arguments?.getString("password")
+                            email = it.arguments?.getString(EMAIL_NAV_KEY),
+                            password = it.arguments?.getString(PASSWORD_NAV_KEY)
                         )
                     }
                 }
@@ -45,7 +59,9 @@ class AuthActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         ColiveryTheme {
-            AuthComposable()
+            AuthComposable(
+                authState = AuthState.SIGN_UP
+            )
         }
     }
 }
