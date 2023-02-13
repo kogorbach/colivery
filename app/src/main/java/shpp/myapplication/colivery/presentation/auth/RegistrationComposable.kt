@@ -52,7 +52,7 @@ fun RegistrationComposable(
         Button(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .semantics { contentDescription = "completeButton" },
+                .semantics { contentDescription = Semantics.COMPLETE_BUTTON },
             onClick = {
                 viewModel.signUp(email, password)
             }) {
@@ -75,7 +75,7 @@ fun TelegramTextField(
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "telegram" }
+                .semantics { contentDescription = Semantics.TELEGRAM_INPUT }
                 .onFocusChanged {
                     if (it.isFocused) {
                         onFocus()
@@ -98,7 +98,7 @@ fun TelegramTextField(
             Text(
                 text = stringResource(id = R.string.telegramNickEmptyError),
                 color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "telegramError" })
+                modifier = Modifier.semantics { contentDescription = Semantics.TELEGRAM_ERROR })
         }
     }
 }
@@ -117,7 +117,7 @@ fun NicknameTextField(
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "nickname" }
+                .semantics { contentDescription = Semantics.NICKNAME_INPUT }
                 .onFocusChanged {
                     if (it.isFocused) {
                         onFocus()
@@ -134,7 +134,7 @@ fun NicknameTextField(
             Text(
                 text = stringResource(id = R.string.nicknameEmptyError),
                 color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "nicknameError" }
+                modifier = Modifier.semantics { contentDescription = Semantics.NICKNAME_ERROR }
             )
         }
     }

@@ -15,6 +15,11 @@ object Semantics {
 
     // RegistrationComposable
     const val REGISTRATION_COMPOSABLE = "registration screen"
+    const val NICKNAME_INPUT = "nickname input"
+    const val NICKNAME_ERROR = "nickname error"
+    const val TELEGRAM_INPUT = "telegram input"
+    const val TELEGRAM_ERROR = "telegram error"
+    const val COMPLETE_BUTTON = "complete button"
 
     // MainActivity
     const val MAIN_ACTIVITY = "mainActivity"

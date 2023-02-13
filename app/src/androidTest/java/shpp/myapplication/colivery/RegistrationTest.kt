@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import shpp.myapplication.colivery.presentation.auth.RegistrationComposable
+import shpp.myapplication.colivery.utils.Semantics
 
 @RunWith(JUnit4::class)
 class RegistrationTest {
@@ -57,22 +58,22 @@ class RegistrationTest {
     }
 
     private fun nickname(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("nickname"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.NICKNAME_INPUT))
     }
 
     private fun telegram(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("telegram"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.TELEGRAM_INPUT))
     }
 
     private fun telegramError(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("telegramError"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.TELEGRAM_ERROR))
     }
 
     private fun nicknameError(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("nicknameError"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.NICKNAME_ERROR))
     }
 
     private fun completeButton(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription("completeButton"))
+        return composeTestRule.onNode(hasContentDescription(Semantics.COMPLETE_BUTTON))
     }
 }

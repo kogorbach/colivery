@@ -129,19 +129,19 @@ class AuthTest {
     }
 
     private val emailTextInput by lazy {
-        composeTestRule.onNode(hasContentDescription("email input"))
+        composeTestRule.onNode(hasContentDescription(Semantics.EMAIL_INPUT))
     }
 
     private val passwordTextInput by lazy {
-        composeTestRule.onNode(hasContentDescription("password input"))
+        composeTestRule.onNode(hasContentDescription(Semantics.PASSWORD_INPUT))
     }
 
     private val emailError by lazy {
-        composeTestRule.onNode(hasContentDescription("email error"))
+        composeTestRule.onNode(hasContentDescription(Semantics.EMAIL_ERROR))
     }
 
     private val passwordError by lazy {
-        composeTestRule.onNode(hasContentDescription("password error"))
+        composeTestRule.onNode(hasContentDescription(Semantics.PASSWORD_ERROR))
     }
 
     private fun getString(@StringRes id: Int): String {
