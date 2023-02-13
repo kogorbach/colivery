@@ -1,4 +1,4 @@
-package shpp.myapplication.colivery
+package shpp.myapplication.colivery.auth
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import shpp.myapplication.colivery.R
 import shpp.myapplication.colivery.presentation.auth.AuthComposable
 import shpp.myapplication.colivery.presentation.auth.AuthState
 import shpp.myapplication.colivery.utils.EmailValidator
@@ -45,20 +46,20 @@ class AuthTest {
     }
 
     @Test
-    fun initialState() {
+    fun initialState_displaySignUp() {
         changeActionText.assertTextEquals(getString(R.string.alreadyHaveAccount))
-        authActionButton.assertTextEquals("Sign up")
+        authActionButton.assertTextEquals(getString(R.string.authActionSignUp))
     }
 
     @Test
-    fun changeAuthState() {
+    fun changeAuthState_displaySignIn() {
         changeActionText.performClick()
         changeActionText.assertTextEquals(getString(R.string.newToTheApp))
-        authActionButton.assertTextEquals("Sign in")
+        authActionButton.assertTextEquals(getString(R.string.authActionSignIn))
     }
 
     @Test
-    fun unFocusInvalidEmail() {
+    fun unFocusInvalidEmail_displayError() {
         emailError.assertDoesNotExist()
         emailTextInput.performTextInput("email")
         emailError.assertDoesNotExist()
@@ -70,7 +71,7 @@ class AuthTest {
     }
 
     @Test
-    fun unFocusInvalidPassword() {
+    fun unFocusInvalidPassword_displayError() {
         passwordError.assertDoesNotExist()
         passwordTextInput.performTextInput("pass")
         passwordError.assertDoesNotExist()
@@ -82,21 +83,21 @@ class AuthTest {
     }
 
     @Test
-    fun signUpInvalidEmail() {
+    fun signUpInvalidEmail_displayError() {
         emailTextInput.performTextInput("email")
         authActionButton.performClick()
         emailError.assertIsDisplayed()
     }
 
     @Test
-    fun signUpInvalidPassword() {
+    fun signUpInvalidPassword_displayError() {
         passwordTextInput.performTextInput("pass")
         authActionButton.performClick()
         passwordError.assertIsDisplayed()
     }
 
     @Test
-    fun fixInvalidEmail() {
+    fun fixInvalidEmail_hideError() {
         emailTextInput.performTextInput("email")
         passwordTextInput.performClick()
         emailTextInput.performTextInput("email@gmail.com")
@@ -104,7 +105,7 @@ class AuthTest {
     }
 
     @Test
-    fun fixInvalidPassword() {
+    fun fixInvalidPassword_hideError() {
         passwordTextInput.performTextInput("pass")
         emailTextInput.performClick()
         passwordTextInput.performTextInput("password")
@@ -112,7 +113,7 @@ class AuthTest {
     }
 
     @Test
-    fun emptyFieldsSignup() {
+    fun emptyFieldsSignUp_displayBothErrors() {
         authActionButton.performClick()
         //then show both errors
         emailError.assertIsDisplayed()

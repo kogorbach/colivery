@@ -3,16 +3,18 @@ package shpp.myapplication.colivery.auth
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.navigation.compose.ComposeNavigator
-import androidx.navigation.testing.TestNavHostController
+//import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import shpp.myapplication.colivery.presentation.auth.AuthActivity
 import shpp.myapplication.colivery.presentation.auth.AuthNavHost
 import shpp.myapplication.colivery.utils.Semantics
 
@@ -20,17 +22,17 @@ import shpp.myapplication.colivery.utils.Semantics
 class AuthNavigationTest {
 
     @get:Rule
-    val rule = createComposeRule()
-    lateinit var navController: TestNavHostController
+    val rule = createAndroidComposeRule<AuthActivity>()
+//    lateinit var navController: TestNavHostController
 
-    @Before
-    fun setupAppNavHost() {
-        rule.setContent {
-            navController = TestNavHostController(LocalContext.current)
-            navController.navigatorProvider.addNavigator(ComposeNavigator())
-            AuthNavHost(navController)
-        }
-    }
+//    @Before
+//    fun setupAppNavHost() {
+//        rule.setContent {
+//            navController = TestNavHostController(LocalContext.current)
+//            navController.navigatorProvider.addNavigator(ComposeNavigator())
+//            AuthNavHost(navController)
+//        }
+//    }
 
     @Test
     fun startDestination() {
@@ -100,7 +102,7 @@ class AuthNavigationTest {
         rule.onNode(hasContentDescription(Semantics.MAIN_ACTIVITY))
     }
 
-    private val route by lazy {
-        navController.currentBackStackEntry?.destination?.route
-    }
+//    private val route by lazy {
+//        navController.currentBackStackEntry?.destination?.route
+//    }
 }

@@ -8,4 +8,6 @@
     <string name="passwordInputLabel">password</string>
     <string name="authOrText">OR</string>
     <string name="authInvalidInput">invalid %s</string>
+    <string name="authActionSignIn">Sign in</string>
+    <string name="authActionSignUp">Sign up</string>
 </resources>
