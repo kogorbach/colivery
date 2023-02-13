@@ -1,4 +1,4 @@
-package shpp.myapplication.colivery.data
+package shpp.myapplication.colivery.data.network
 
 data class UserModel(
     val email: String,
