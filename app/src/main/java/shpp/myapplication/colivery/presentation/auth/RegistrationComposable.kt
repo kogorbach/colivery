@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +56,7 @@ fun RegistrationComposable(
             onClick = {
                 viewModel.signUp(email, password)
             }) {
-            Text(text = "Complete")
+            Text(text = stringResource(id = R.string.registrationCompleteButtonText))
         }
     }
 }
@@ -89,13 +90,13 @@ fun TelegramTextField(
                     contentDescription = null
                 )
             },
-            label = { Text(text = "Telegram nickname") },
+            label = { Text(text = stringResource(id = R.string.telegramHint)) },
             isError = error
         )
 
         if (error) {
             Text(
-                text = "invalid telegram nickname",
+                text = stringResource(id = R.string.telegramNickEmptyError),
                 color = MaterialTheme.colors.error,
                 modifier = Modifier.semantics { contentDescription = "telegramError" })
         }
@@ -125,13 +126,13 @@ fun NicknameTextField(
                         onUnfocus()
                     }
                 },
-            label = { Text(text = "Nickname") },
+            label = { Text(text = stringResource(id = R.string.nicknameHint)) },
             isError = error
         )
 
         if (error) {
             Text(
-                text = "nickname cannot be empty",
+                text = stringResource(id = R.string.nicknameEmptyError),
                 color = MaterialTheme.colors.error,
                 modifier = Modifier.semantics { contentDescription = "nicknameError" }
             )

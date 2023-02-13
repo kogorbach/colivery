@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import shpp.myapplication.colivery.R
 import shpp.myapplication.colivery.presentation.MainActivity
@@ -76,7 +77,7 @@ fun AuthComposable(
         Column(modifier = Modifier.fillMaxWidth()) {
             AuthTextField(
                 input = emailValidator.input.value,
-                error = emailValidator.error.value,
+                isError = emailValidator.error.value,
                 onChange = { emailValidator.onInputChange(it) },
                 onUnfocus = { emailValidator.onUnfocus() },
                 onFocus = { emailValidator.onFocus() },
@@ -85,7 +86,7 @@ fun AuthComposable(
             )
             AuthTextField(
                 input = passwordValidator.input.value,
-                error = passwordValidator.error.value,
+                isError = passwordValidator.error.value,
                 onChange = { passwordValidator.onInputChange(it) },
                 onUnfocus = { passwordValidator.onUnfocus() },
                 onFocus = { passwordValidator.onFocus() },
@@ -134,7 +135,7 @@ private fun NormalSpacer() {
 @Composable
 private fun AuthTextField(
     input: String,
-    error: Boolean,
+    isError: Boolean,
     onChange: (String) -> Unit,
     onUnfocus: () -> Unit,
     onFocus: () -> Unit,
@@ -157,10 +158,10 @@ private fun AuthTextField(
                 },
             onValueChange = onChange,
             label = { Text(text = label) },
-            isError = error
+            isError = isError
         )
 
-        if (error) {
+        if (isError) {
             Text(
                 text = stringResource(R.string.authInvalidInput, label),
                 color = MaterialTheme.colors.error,
@@ -214,7 +215,8 @@ private fun GoogleAuthButton(modifier: Modifier, onAuthClick: () -> Unit) {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_google),
-            contentDescription = Semantics.GOOGLE_AUTH
+            contentDescription = Semantics.GOOGLE_AUTH,
+            Modifier.padding(end = 8.dp)
         )
         Text(text = stringResource(R.string.googleAuthText))
     }

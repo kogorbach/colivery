@@ -41,6 +41,6 @@ class AuthViewModel @Inject constructor(
     }
 
     fun signInWithGoogle() {
-        // todo implement [by ratrider:]
+        // todo implement [by Kostyan:]
     }
 }

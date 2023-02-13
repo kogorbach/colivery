@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">colivery</string>
+    <!--     Auth Screen-->
     <string name="alreadyHaveAccount">Already have an account? Sign in</string>
     <string name="newToTheApp">New to the app? Sign up</string>
     <string name="authenticationFailedToast">Authentication failed</string>
@@ -10,4 +11,12 @@
     <string name="authInvalidInput">invalid %s</string>
     <string name="authActionSignIn">Sign in</string>
     <string name="authActionSignUp">Sign up</string>
+
+<!--    registration screen-->
+    <string name="nicknameHint">Nickname</string>
+    <string name="telegramHint">Telegram nickname</string>
+    <string name="nicknameEmptyError">nickname cannot be empty</string>
+    <string name="telegramNickEmptyError">invalid telegram nickname</string>
+    <string name="registrationCompleteButtonText">Complete</string>
+
 </resources>
