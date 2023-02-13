@@ -5,14 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import shpp.myapplication.colivery.data.network.FirebaseService
+import shpp.myapplication.colivery.domain.repo.FirebaseRepository
 import shpp.myapplication.colivery.utils.EmailValidator
 import shpp.myapplication.colivery.utils.PasswordValidator
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val firebase: FirebaseService
+    private val firebase: FirebaseRepository
 ) : ViewModel() {
 
     val emailValidator = EmailValidator()
