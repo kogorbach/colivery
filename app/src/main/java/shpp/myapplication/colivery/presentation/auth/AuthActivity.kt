@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import shpp.myapplication.colivery.presentation.registration.RegistrationComposable
 import shpp.myapplication.colivery.presentation.ui.theme.ColiveryTheme
 import shpp.myapplication.colivery.utils.Semantics
 

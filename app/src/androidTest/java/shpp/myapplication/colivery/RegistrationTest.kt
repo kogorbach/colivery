@@ -7,7 +7,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import shpp.myapplication.colivery.presentation.auth.RegistrationComposable
+import shpp.myapplication.colivery.presentation.registration.RegistrationComposable
 import shpp.myapplication.colivery.utils.Semantics
 
 @RunWith(JUnit4::class)

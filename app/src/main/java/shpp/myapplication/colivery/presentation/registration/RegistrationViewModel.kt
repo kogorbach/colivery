@@ -1,4 +1,4 @@
-package shpp.myapplication.colivery.presentation.auth
+package shpp.myapplication.colivery.presentation.registration
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
