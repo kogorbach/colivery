@@ -8,8 +8,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,19 +35,21 @@ fun AuthComposable(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     AuthComposable(
         emailValidator = viewModel.emailValidator,
         passwordValidator = viewModel.passwordValidator,
         authState = viewModel.state,
         onAuthButtonClick = {
+            focusManager.clearFocus()
             onAuthButtonClick(
                 viewModel = viewModel,
                 onNavigateToRegistration = onNavigateToRegistration
             )
         },
         changeState = viewModel::changeState,
-        isLoading = viewModel.loadingState
+        isLoading = viewModel.loadingState == AuthViewModel.SignInEvent.LOADING
     )
 }
 
@@ -71,8 +76,8 @@ fun AuthComposable(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             AuthTextField(
-                input = emailValidator.input.value,
-                isError = emailValidator.error.value,
+                input = emailValidator.input,
+                isError = emailValidator.error,
                 onChange = { emailValidator.onInputChange(it) },
                 onUnfocus = { emailValidator.onUnfocus() },
                 onFocus = { emailValidator.onFocus() },
@@ -80,8 +85,8 @@ fun AuthComposable(
                 modifier = Modifier.fillMaxWidth()
             )
             AuthTextField(
-                input = passwordValidator.input.value,
-                isError = passwordValidator.error.value,
+                input = passwordValidator.input,
+                isError = passwordValidator.error,
                 onChange = { passwordValidator.onInputChange(it) },
                 onUnfocus = { passwordValidator.onUnfocus() },
                 onFocus = { passwordValidator.onFocus() },
@@ -111,7 +116,9 @@ fun AuthComposable(
         }
         AnimatedVisibility(visible = isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .semantics { contentDescription = Semantics.SIGN_IN_PROGRESS }
             )
         }
         ChangeAuthActionText(
@@ -230,8 +237,8 @@ private fun onAuthButtonClick(
         AuthState.SIGN_UP -> {
             if (viewModel.validate()) {
                 onNavigateToRegistration(
-                    viewModel.emailValidator.input.value,
-                    viewModel.passwordValidator.input.value
+                    viewModel.emailValidator.input,
+                    viewModel.passwordValidator.input
                 )
             }
         }

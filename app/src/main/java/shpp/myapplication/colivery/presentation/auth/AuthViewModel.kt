@@ -23,7 +23,7 @@ class AuthViewModel @Inject constructor(
     val passwordValidator = PasswordValidator()
 
     var state by mutableStateOf(AuthState.SIGN_UP)
-    var loadingState by mutableStateOf(false)
+    var loadingState by mutableStateOf(SignInEvent.IDLE)
     var authError by mutableStateOf<String?>(null)
 
     fun changeState() {
@@ -42,13 +42,14 @@ class AuthViewModel @Inject constructor(
                 when (it) {
                     is Response.Failure -> {
                         authError = it.message
-                        loadingState = false
+                        loadingState = SignInEvent.FINISHED
                     }
 
-                    Response.Loading -> loadingState = true
+                    Response.Loading -> loadingState = SignInEvent.LOADING
 
                     is Response.Success -> {
-                        loadingState = false
+
+                        loadingState = SignInEvent.FINISHED
                     }
                 }
             }
@@ -57,5 +58,11 @@ class AuthViewModel @Inject constructor(
 
     fun signInWithGoogle() {
         // todo implement [by Kostyan:]
+    }
+
+    enum class SignInEvent {
+        IDLE,
+        LOADING,
+        FINISHED
     }
 }
