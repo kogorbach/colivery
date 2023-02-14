@@ -51,10 +51,12 @@ class AuthViewModel @Inject constructor(
                     }
 
                     Response.Loading -> {
+                        signInError = null
                         isLoading = true
                     }
 
                     is Response.Success -> {
+                        signInError = null
                         isLoading = false
                         signInComplete = true
                     }

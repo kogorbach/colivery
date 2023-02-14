@@ -23,8 +23,12 @@ class RegistrationViewModel @Inject constructor(
     val nicknameValidator = NicknameValidator()
     val telegramValidator = TelegramValidator()
 
-    var displayLoadingState by mutableStateOf(false)
-    var signUpResultState by mutableStateOf(SignUpResult.Idle)
+    var displayLoading by mutableStateOf(false)
+        private set
+    var signUpComplete by mutableStateOf(false)
+        private set
+    var signUpError by mutableStateOf<String?>(null)
+        private set
 
     fun signUp(email: String?, password: String?) {
         if (email == null || password == null) {
@@ -36,23 +40,26 @@ class RegistrationViewModel @Inject constructor(
                 email,
                 password,
                 UserModel(
-                  nickname = nicknameValidator.input,
-                  telegram = nicknameValidator.input // todo implement phone and image
+                    nickname = nicknameValidator.input,
+                    telegram = nicknameValidator.input // todo implement phone and image
                 )
             ).collectLatest {
                 when (it) {
-                    is Response.Failure -> TODO()
-                    Response.Loading -> displayLoadingState = true
-                    is Response.Success -> TODO()
+                    is Response.Failure -> {
+                        displayLoading = false
+                        signUpError = it.message
+                    }
+                    Response.Loading -> {
+                        signUpError = null
+                        displayLoading = true
+                    }
+                    is Response.Success -> {
+                        signUpError = null
+                        displayLoading = false
+                        signUpComplete = true
+                    }
                 }
             }
         }
-    }
-
-    sealed class SignUpResult {
-        data class Error(val error: String) : SignUpResult()
-        object Loading : SignUpResult()
-        object Success : SignUpResult()
-        object Idle : SignUpResult()
     }
 }

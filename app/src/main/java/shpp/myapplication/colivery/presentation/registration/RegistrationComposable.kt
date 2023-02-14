@@ -18,13 +18,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import shpp.myapplication.colivery.R
+import shpp.myapplication.colivery.utils.InputValidator
+import shpp.myapplication.colivery.utils.NicknameValidator
 import shpp.myapplication.colivery.utils.Semantics
+import shpp.myapplication.colivery.utils.TelegramValidator
 
+//stateful
 @Composable
 fun RegistrationComposable(
     email: String?,
     password: String?,
     viewModel: RegistrationViewModel = hiltViewModel()
+) {
+    RegistrationComposable(
+        nicknameValidator = viewModel.nicknameValidator,
+        telegramValidator = viewModel.telegramValidator,
+        onComplete = { viewModel.signUp(email, password) }
+    )
+}
+
+//stateless
+@Composable
+fun RegistrationComposable(
+    nicknameValidator: NicknameValidator = NicknameValidator(),
+    telegramValidator: TelegramValidator = TelegramValidator(),
+    onComplete: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -35,18 +53,10 @@ fun RegistrationComposable(
     ) {
         Column {
             NicknameTextField(
-                nickname = viewModel.nicknameValidator.input,
-                error = viewModel.nicknameValidator.error,
-                onValueChange = { viewModel.nicknameValidator.onInputChange(it) },
-                onFocus = { viewModel.nicknameValidator.onFocus() },
-                onUnfocus = { viewModel.nicknameValidator.onUnfocus() }
+                inputValidator = nicknameValidator
             )
             TelegramTextField(
-                telegram = viewModel.telegramValidator.input,
-                error = viewModel.telegramValidator.error,
-                onValueChange = { viewModel.telegramValidator.onInputChange(it) },
-                onFocus = { viewModel.telegramValidator.onFocus() },
-                onUnfocus = { viewModel.telegramValidator.onUnfocus() }
+                inputValidator = telegramValidator
             )
         }
         Button(
@@ -54,88 +64,76 @@ fun RegistrationComposable(
                 .align(Alignment.CenterHorizontally)
                 .semantics { contentDescription = Semantics.COMPLETE_BUTTON },
             onClick = {
-                viewModel.signUp(email, password)
+                onComplete()
             }) {
             Text(text = stringResource(id = R.string.registrationCompleteButtonText))
+        }
+    }
+
+}
+
+@Composable
+fun NicknameTextField(
+    inputValidator: InputValidator
+) {
+    inputValidator.run {
+        Column {
+            OutlinedTextField(
+                value = input,
+                onValueChange = { onInputChange(it) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = Semantics.NICKNAME_INPUT }
+                    .onFocusChanged {
+                        onFocusChange(it)
+                    },
+                label = { Text(text = stringResource(id = R.string.nicknameHint)) },
+                isError = error
+            )
+
+            if (error) {
+                Text(
+                    text = stringResource(id = R.string.nicknameEmptyError),
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.semantics { contentDescription = Semantics.NICKNAME_ERROR }
+                )
+            }
         }
     }
 }
 
 @Composable
 fun TelegramTextField(
-    telegram: String,
-    error: Boolean,
-    onValueChange: (String) -> Unit,
-    onFocus: () -> Unit,
-    onUnfocus: () -> Unit
+    inputValidator: TelegramValidator
 ) {
-    Column {
-        OutlinedTextField(
-            value = telegram,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = Semantics.TELEGRAM_INPUT }
-                .onFocusChanged {
-                    if (it.isFocused) {
-                        onFocus()
-                    }
-                    if (!it.hasFocus) {
-                        onUnfocus()
-                    }
+    inputValidator.run {
+        Column {
+            OutlinedTextField(
+                value = input,
+                onValueChange = { onInputChange(it) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = Semantics.TELEGRAM_INPUT }
+                    .onFocusChanged {
+                        onFocusChange(it)
+                    },
+                leadingIcon = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_telegram),
+                        contentDescription = null
+                    )
                 },
-            leadingIcon = {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_telegram),
-                    contentDescription = null
-                )
-            },
-            label = { Text(text = stringResource(id = R.string.telegramHint)) },
-            isError = error
-        )
 
-        if (error) {
-            Text(
-                text = stringResource(id = R.string.telegramNickEmptyError),
-                color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = Semantics.TELEGRAM_ERROR })
-        }
-    }
-}
-
-@Composable
-fun NicknameTextField(
-    nickname: String,
-    error: Boolean,
-    onValueChange: (String) -> Unit,
-    onFocus: () -> Unit,
-    onUnfocus: () -> Unit
-) {
-    Column {
-        OutlinedTextField(
-            value = nickname,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = Semantics.NICKNAME_INPUT }
-                .onFocusChanged {
-                    if (it.isFocused) {
-                        onFocus()
-                    }
-                    if (!it.hasFocus) {
-                        onUnfocus()
-                    }
-                },
-            label = { Text(text = stringResource(id = R.string.nicknameHint)) },
-            isError = error
-        )
-
-        if (error) {
-            Text(
-                text = stringResource(id = R.string.nicknameEmptyError),
-                color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = Semantics.NICKNAME_ERROR }
+                label = { Text(text = stringResource(id = R.string.telegramHint)) },
+                isError = error
             )
+
+            if (error) {
+                Text(
+                    text = stringResource(id = R.string.telegramNickEmptyError),
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.semantics { contentDescription = Semantics.TELEGRAM_ERROR })
+            }
         }
     }
 }

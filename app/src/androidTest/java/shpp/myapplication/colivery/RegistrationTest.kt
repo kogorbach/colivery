@@ -19,61 +19,58 @@ class RegistrationTest {
     @Before
     fun init() {
         composeTestRule.setContent {
-            RegistrationComposable(
-                email = "email@gmail.com",
-                password = "password"
-            )
+            RegistrationComposable()
         }
     }
 
     @Test
     fun invalidNickname() {
-        nickname().performClick()
-        telegram().performClick()
-        nicknameError().assertIsDisplayed()
+        nickname.performClick()
+        telegram.performClick()
+        nicknameError.assertIsDisplayed()
     }
 
     @Test
     fun invalidTelegram() {
-        telegramError().assertDoesNotExist()
-        telegram().performTextInput("tel")
-        nickname().performClick()
-        telegramError().assertIsDisplayed()
+        telegramError.assertDoesNotExist()
+        telegram.performTextInput("tel")
+        nickname.performClick()
+        telegramError.assertIsDisplayed()
     }
 
     @Test
     fun fixInvalidNickname() {
-        nickname().performClick()
-        telegram().performClick()
-        nickname().performTextInput("nick")
-        nicknameError().assertDoesNotExist()
+        nickname.performClick()
+        telegram.performClick()
+        nickname.performTextInput("nick")
+        nicknameError.assertDoesNotExist()
     }
 
     @Test
     fun fixInvalidTelegram() {
-        telegram().performTextInput("tel")
-        nickname().performClick()
-        telegram().performTextInput("telegram")
-        telegramError().assertDoesNotExist()
+        telegram.performTextInput("tel")
+        nickname.performClick()
+        telegram.performTextInput("telegram")
+        telegramError.assertDoesNotExist()
     }
 
-    private fun nickname(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription(Semantics.NICKNAME_INPUT))
+    private val nickname by lazy {
+        composeTestRule.onNode(hasContentDescription(Semantics.NICKNAME_INPUT))
     }
 
-    private fun telegram(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription(Semantics.TELEGRAM_INPUT))
+    private val telegram by lazy {
+        composeTestRule.onNode(hasContentDescription(Semantics.TELEGRAM_INPUT))
     }
 
-    private fun telegramError(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription(Semantics.TELEGRAM_ERROR))
+    private val telegramError by lazy {
+        composeTestRule.onNode(hasContentDescription(Semantics.TELEGRAM_ERROR))
     }
 
-    private fun nicknameError(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription(Semantics.NICKNAME_ERROR))
+    private val nicknameError by lazy {
+        composeTestRule.onNode(hasContentDescription(Semantics.NICKNAME_ERROR))
     }
 
-    private fun completeButton(): SemanticsNodeInteraction {
-        return composeTestRule.onNode(hasContentDescription(Semantics.COMPLETE_BUTTON))
+    private val completeButton by lazy {
+        composeTestRule.onNode(hasContentDescription(Semantics.COMPLETE_BUTTON))
     }
 }

@@ -3,6 +3,7 @@ package shpp.myapplication.colivery.utils
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.FocusState
 
 sealed class InputValidator {
 
@@ -20,6 +21,15 @@ sealed class InputValidator {
     fun onInputChange(query: String = input) {
         input = query
         error = checkError() && focusLost
+    }
+
+    fun onFocusChange(state: FocusState) {
+        if (state.isFocused) {
+            onFocus()
+        }
+        if (!state.hasFocus) {
+            onUnfocus()
+        }
     }
 
     fun onFocus() {
