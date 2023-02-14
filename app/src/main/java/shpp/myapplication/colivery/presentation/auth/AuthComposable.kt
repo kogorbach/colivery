@@ -101,20 +101,12 @@ fun AuthComposable(
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 AuthTextField(
-                    input = emailValidator.input,
-                    isError = emailValidator.error,
-                    onChange = { emailValidator.onInputChange(it) },
-                    onUnfocus = { emailValidator.onUnfocus() },
-                    onFocus = { emailValidator.onFocus() },
+                    inputValidator = emailValidator,
                     label = stringResource(R.string.emailInputLabel),
                     modifier = Modifier.fillMaxWidth()
                 )
                 AuthTextField(
-                    input = passwordValidator.input,
-                    isError = passwordValidator.error,
-                    onChange = { passwordValidator.onInputChange(it) },
-                    onUnfocus = { passwordValidator.onUnfocus() },
-                    onFocus = { passwordValidator.onFocus() },
+                    inputValidator = passwordValidator,
                     label = stringResource(R.string.passwordInputLabel),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -160,38 +152,31 @@ private fun NormalSpacer() {
 
 @Composable
 private fun AuthTextField(
-    input: String,
-    isError: Boolean,
-    onChange: (String) -> Unit,
-    onUnfocus: () -> Unit,
-    onFocus: () -> Unit,
+    inputValidator: InputValidator,
     modifier: Modifier,
     label: String,
 ) {
 
-    Column(modifier = modifier) {
-        OutlinedTextField(
-            value = input,
-            modifier = modifier
-                .semantics { contentDescription = "$label input" }
-                .onFocusChanged {
-                    if (it.isFocused) {
-                        onFocus()
-                    }
-                    if (!it.hasFocus) {
-                        onUnfocus()
-                    }
-                },
-            onValueChange = onChange,
-            label = { Text(text = label) },
-            isError = isError
-        )
+    inputValidator.run {
+        Column(modifier = modifier) {
+            OutlinedTextField(
+                value = input,
+                modifier = modifier
+                    .semantics { contentDescription = "$label input" }
+                    .onFocusChanged {
+                        onFocusChange(it)
+                    },
+                onValueChange = { onInputChange(it) },
+                label = { Text(text = label) },
+                isError = error
+            )
 
-        if (isError) {
-            Text(
-                text = stringResource(R.string.authInvalidInput, label),
-                color = MaterialTheme.colors.error,
-                modifier = Modifier.semantics { contentDescription = "$label error" })
+            if (error) {
+                Text(
+                    text = stringResource(R.string.authInvalidInput, label),
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.semantics { contentDescription = "$label error" })
+            }
         }
     }
 }

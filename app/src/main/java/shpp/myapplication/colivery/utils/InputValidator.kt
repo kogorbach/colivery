@@ -32,22 +32,22 @@ sealed class InputValidator {
         }
     }
 
-    fun onFocus() {
-        wasFocused = true
-    }
-
-    fun onUnfocus(forced: Boolean = false) {
-        if (wasFocused || forced) {
-            focusLost = true
-            onInputChange()
-        }
-    }
-
     fun validate() {
         onUnfocus(forced = true)
     }
 
     protected abstract fun checkError(query: String = input): Boolean
+
+    private fun onFocus() {
+        wasFocused = true
+    }
+
+    private fun onUnfocus(forced: Boolean = false) {
+        if (wasFocused || forced) {
+            focusLost = true
+            onInputChange()
+        }
+    }
 }
 
 class MockValidator : InputValidator() {
