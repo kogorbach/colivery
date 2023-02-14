@@ -3,6 +3,8 @@ package shpp.myapplication.colivery.auth
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
@@ -31,14 +33,14 @@ class AuthTest {
     val composeTestRule = createComposeRule()
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    private var authState = mutableStateOf(AuthState.SIGN_UP)
+    private var authState by mutableStateOf(AuthState.SIGN_UP)
 
     @Before
     fun init() {
         composeTestRule.setContent {
             AuthComposable(
-                authState = authState.value,
-                changeState = { authState.value = authState.value.changeState() },
+                authState = authState,
+                changeState = { authState = authState.changeState() },
                 emailValidator = EmailValidator(),
                 passwordValidator = PasswordValidator()
             )

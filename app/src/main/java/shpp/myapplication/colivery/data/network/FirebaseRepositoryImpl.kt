@@ -1,9 +1,9 @@
 package shpp.myapplication.colivery.data.network
 
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import shpp.myapplication.colivery.domain.repo.FirebaseRepository
 import shpp.myapplication.colivery.utils.Constants
@@ -18,30 +18,27 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun signIn(
         email: String,
-        password: String,
-        onSuccess: (Task<AuthResult>) -> Unit,
-        onFailure: (String) -> Unit
+        password: String
     ) =
-        try {
+        flow<Response<Boolean>> {
+            emit(Response.Loading)
             auth.signInWithEmailAndPassword(email, password).await()
             Response.Success(true)
-        } catch (exception: Exception) {
-            Response.Failure(exception)
+        }.catch {
+            emit(Response.Failure(it.message ?: Constants.DEFAULT_NETWORK_ERROR))
         }
 
     override suspend fun signUp(
         email: String,
         password: String,
         user: UserModel,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-            firestore.usersCollection().add(user).addOnSuccessListener {
-                onSuccess()
-            }.addOnFailureListener {
-                onFailure(it.message ?: Constants.DEFAULT_NETWORK_ERROR)
-            }
-        }
+    ) = flow {
+        emit(Response.Loading)
+        auth.createUserWithEmailAndPassword(email, password).await()
+        firestore.usersCollection.add(user).await()
+        auth.signInWithEmailAndPassword(email, password).await()
+        emit(Response.Success(true))
+    }.catch {
+        emit(Response.Failure(it.message ?: Constants.DEFAULT_NETWORK_ERROR))
     }
 }

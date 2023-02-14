@@ -1,7 +1,5 @@
 package shpp.myapplication.colivery.presentation.auth
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -24,17 +22,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import shpp.myapplication.colivery.R
-import shpp.myapplication.colivery.presentation.MainActivity
 import shpp.myapplication.colivery.utils.EmailValidator
 import shpp.myapplication.colivery.utils.InputValidator
 import shpp.myapplication.colivery.utils.PasswordValidator
 import shpp.myapplication.colivery.utils.Semantics
-import shpp.myapplication.colivery.utils.ext.toast
 
 //stateful composable
 @Composable
 fun AuthComposable(
-    onNavigateToMain: (String, String) -> Unit,
+    onNavigateToRegistration: (String, String) -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -46,8 +42,7 @@ fun AuthComposable(
         onAuthButtonClick = {
             onAuthButtonClick(
                 viewModel = viewModel,
-                onNavigateToMain = onNavigateToMain,
-                context = context
+                onNavigateToRegistration = onNavigateToRegistration
             )
         },
         changeState = viewModel::changeState
@@ -224,24 +219,20 @@ private fun GoogleAuthButton(modifier: Modifier, onAuthClick: () -> Unit) {
 
 private fun onAuthButtonClick(
     viewModel: AuthViewModel,
-    onNavigateToMain: (String, String) -> Unit,
-    context: Context
+    onNavigateToRegistration: (String, String) -> Unit
 ) {
-    if (viewModel.state == AuthState.SIGN_UP) {
-        if (viewModel.validate()) {
-            onNavigateToMain(
-                viewModel.emailValidator.input.value,
-                viewModel.passwordValidator.input.value
-            )
+    when (viewModel.state) {
+        AuthState.SIGN_UP -> {
+            if (viewModel.validate()) {
+                onNavigateToRegistration(
+                    viewModel.emailValidator.input.value,
+                    viewModel.passwordValidator.input.value
+                )
+            }
         }
-    } else {
-        viewModel.signIn(
-            onSuccess = {
-                context.startActivity(Intent(context, MainActivity::class.java))
-            },
-            onFailure = {
-                context.toast(R.string.authenticationFailedToast)
-            })
+        AuthState.SIGN_IN -> {
+            viewModel.signIn()
+        }
     }
 }
 

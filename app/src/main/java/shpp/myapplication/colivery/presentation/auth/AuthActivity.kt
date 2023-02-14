@@ -49,7 +49,7 @@ fun AuthNavHost(navController: NavHostController) {
         NavHost(navController = navController, startDestination = Semantics.AUTH_COMPOSABLE) {
             composable(Semantics.AUTH_COMPOSABLE) {
                 AuthComposable(
-                    onNavigateToMain = { email, password ->
+                    onNavigateToRegistration = { email, password ->
                         navController.navigate("registrationScreen/$email/$password")
                     }
                 )

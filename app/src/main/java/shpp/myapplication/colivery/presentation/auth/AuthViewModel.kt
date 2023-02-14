@@ -4,7 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import shpp.myapplication.colivery.domain.repo.FirebaseRepository
 import shpp.myapplication.colivery.utils.EmailValidator
 import shpp.myapplication.colivery.utils.PasswordValidator
@@ -30,14 +33,12 @@ class AuthViewModel @Inject constructor(
         return !passwordValidator.error.value && !emailValidator.error.value
     }
 
-    fun signIn(onSuccess: () -> Unit, onFailure: () -> Unit) {
-        firebase.signIn(emailValidator.input.value, passwordValidator.input.value, onSuccess = {
-            if (it.isSuccessful) {
-                onSuccess()
-            } else {
-                onFailure()
+    fun signIn() {
+        viewModelScope.launch {
+            firebase.signIn(emailValidator.input.value, passwordValidator.input.value).collectLatest {
+
             }
-        })
+        }
     }
 
     fun signInWithGoogle() {
