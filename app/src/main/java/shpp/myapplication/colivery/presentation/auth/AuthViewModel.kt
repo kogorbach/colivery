@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import shpp.myapplication.colivery.data.network.Response
 import shpp.myapplication.colivery.domain.repo.FirebaseRepository
 import shpp.myapplication.colivery.utils.EmailValidator
 import shpp.myapplication.colivery.utils.PasswordValidator
@@ -22,6 +23,8 @@ class AuthViewModel @Inject constructor(
     val passwordValidator = PasswordValidator()
 
     var state by mutableStateOf(AuthState.SIGN_UP)
+    var loadingState by mutableStateOf(false)
+    var authError by mutableStateOf<String?>(null)
 
     fun changeState() {
         state = state.changeState()
@@ -30,13 +33,24 @@ class AuthViewModel @Inject constructor(
     fun validate(): Boolean {
         emailValidator.validate()
         passwordValidator.validate()
-        return !passwordValidator.error.value && !emailValidator.error.value
+        return !passwordValidator.error && !emailValidator.error
     }
 
     fun signIn() {
         viewModelScope.launch {
-            firebase.signIn(emailValidator.input.value, passwordValidator.input.value).collectLatest {
+            firebase.signIn(emailValidator.input, passwordValidator.input).collectLatest {
+                when (it) {
+                    is Response.Failure -> {
+                        authError = it.message
+                        loadingState = false
+                    }
 
+                    Response.Loading -> loadingState = true
+
+                    is Response.Success -> {
+                        loadingState = false
+                    }
+                }
             }
         }
     }

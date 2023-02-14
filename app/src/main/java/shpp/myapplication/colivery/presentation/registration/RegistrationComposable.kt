@@ -35,15 +35,15 @@ fun RegistrationComposable(
     ) {
         Column {
             NicknameTextField(
-                nickname = viewModel.nicknameValidator.input.value,
-                error = viewModel.nicknameValidator.error.value,
+                nickname = viewModel.nicknameValidator.input,
+                error = viewModel.nicknameValidator.error,
                 onValueChange = { viewModel.nicknameValidator.onInputChange(it) },
                 onFocus = { viewModel.nicknameValidator.onFocus() },
                 onUnfocus = { viewModel.nicknameValidator.onUnfocus() }
             )
             TelegramTextField(
-                telegram = viewModel.telegramValidator.input.value,
-                error = viewModel.telegramValidator.error.value,
+                telegram = viewModel.telegramValidator.input,
+                error = viewModel.telegramValidator.error,
                 onValueChange = { viewModel.telegramValidator.onInputChange(it) },
                 onFocus = { viewModel.telegramValidator.onFocus() },
                 onUnfocus = { viewModel.telegramValidator.onUnfocus() }

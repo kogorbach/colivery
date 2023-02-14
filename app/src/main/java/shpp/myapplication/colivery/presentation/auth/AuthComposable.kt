@@ -1,12 +1,10 @@
 package shpp.myapplication.colivery.presentation.auth
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +43,8 @@ fun AuthComposable(
                 onNavigateToRegistration = onNavigateToRegistration
             )
         },
-        changeState = viewModel::changeState
+        changeState = viewModel::changeState,
+        isLoading = viewModel.loadingState
     )
 }
 
@@ -60,7 +59,8 @@ fun AuthComposable(
         passwordValidator.validate()
     },
     changeState: () -> Unit = {},
-    signInWithGoogle: () -> Unit = {}
+    signInWithGoogle: () -> Unit = {},
+    isLoading: Boolean = false
 ) {
     Column(
         modifier = Modifier
@@ -108,6 +108,11 @@ fun AuthComposable(
                 onAuthClick = {
                     signInWithGoogle()
                 })
+        }
+        AnimatedVisibility(visible = isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
         }
         ChangeAuthActionText(
             modifier = Modifier

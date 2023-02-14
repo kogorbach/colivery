@@ -12,6 +12,7 @@ object Semantics {
     const val PASSWORD_INPUT = "password input"
     const val EMAIL_ERROR = "email error"
     const val PASSWORD_ERROR = "password error"
+    const val SIGN_IN_PROGRESS = "sign in progress indicator"
 
     // RegistrationComposable
     const val REGISTRATION_COMPOSABLE = "registration screen"

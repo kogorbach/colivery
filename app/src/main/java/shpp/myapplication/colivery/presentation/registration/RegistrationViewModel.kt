@@ -36,8 +36,8 @@ class RegistrationViewModel @Inject constructor(
                 email,
                 password,
                 UserModel(
-                  nickname = nicknameValidator.input.value,
-                  telegram = nicknameValidator.input.value // todo implement phone and image
+                  nickname = nicknameValidator.input,
+                  telegram = nicknameValidator.input // todo implement phone and image
                 )
             ).collectLatest {
                 when (it) {

@@ -1,6 +1,8 @@
 package shpp.myapplication.colivery.utils
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 
 sealed class InputValidator {
 
@@ -9,15 +11,15 @@ sealed class InputValidator {
         const val TELEGRAM_MIN_LENGTH = 5
     }
 
-    var input = mutableStateOf("")
-    var error = mutableStateOf(false)
+    var input by mutableStateOf("")
+    var error by mutableStateOf(false)
 
     var wasFocused = false
     var focusLost = false
 
-    fun onInputChange(query: String = input.value) {
-        input.value = query
-        error.value = checkError() && focusLost
+    fun onInputChange(query: String = input) {
+        input = query
+        error = checkError() && focusLost
     }
 
     fun onFocus() {
@@ -35,7 +37,7 @@ sealed class InputValidator {
         onUnfocus(forced = true)
     }
 
-    protected abstract fun checkError(query: String = input.value): Boolean
+    protected abstract fun checkError(query: String = input): Boolean
 }
 
 class MockValidator : InputValidator() {
