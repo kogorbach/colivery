@@ -23,8 +23,13 @@ class AuthViewModel @Inject constructor(
     val passwordValidator = PasswordValidator()
 
     var state by mutableStateOf(AuthState.SIGN_UP)
-    var loadingState by mutableStateOf(SignInEvent.IDLE)
-    var authError by mutableStateOf<String?>(null)
+        private set
+    var isLoading by mutableStateOf(false)
+        private set
+    var signInComplete by mutableStateOf(false)
+        private set
+    var signInError by mutableStateOf<String?>(null)
+        private set
 
     fun changeState() {
         state = state.changeState()
@@ -41,15 +46,17 @@ class AuthViewModel @Inject constructor(
             firebase.signIn(emailValidator.input, passwordValidator.input).collectLatest {
                 when (it) {
                     is Response.Failure -> {
-                        authError = it.message
-                        loadingState = SignInEvent.FINISHED
+                        isLoading = false
+                        signInError = it.message
                     }
 
-                    Response.Loading -> loadingState = SignInEvent.LOADING
+                    Response.Loading -> {
+                        isLoading = true
+                    }
 
                     is Response.Success -> {
-
-                        loadingState = SignInEvent.FINISHED
+                        isLoading = false
+                        signInComplete = true
                     }
                 }
             }
@@ -58,11 +65,5 @@ class AuthViewModel @Inject constructor(
 
     fun signInWithGoogle() {
         // todo implement [by Kostyan:]
-    }
-
-    enum class SignInEvent {
-        IDLE,
-        LOADING,
-        FINISHED
     }
 }

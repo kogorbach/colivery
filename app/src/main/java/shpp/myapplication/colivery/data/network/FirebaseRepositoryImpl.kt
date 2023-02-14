@@ -20,10 +20,10 @@ class FirebaseRepositoryImpl @Inject constructor(
         email: String,
         password: String
     ) =
-        flow<Response<Boolean>> {
+        flow {
             emit(Response.Loading)
             auth.signInWithEmailAndPassword(email, password).await()
-            Response.Success(true)
+            emit(Response.Success(true))
         }.catch {
             emit(Response.Failure(it.message ?: Constants.DEFAULT_NETWORK_ERROR))
         }

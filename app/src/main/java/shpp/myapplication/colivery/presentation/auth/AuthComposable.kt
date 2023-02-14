@@ -1,11 +1,13 @@
 package shpp.myapplication.colivery.presentation.auth
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -23,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import shpp.myapplication.colivery.R
+import shpp.myapplication.colivery.presentation.MainActivity
 import shpp.myapplication.colivery.utils.EmailValidator
 import shpp.myapplication.colivery.utils.InputValidator
 import shpp.myapplication.colivery.utils.PasswordValidator
@@ -34,8 +37,8 @@ fun AuthComposable(
     onNavigateToRegistration: (String, String) -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     AuthComposable(
         emailValidator = viewModel.emailValidator,
@@ -49,7 +52,11 @@ fun AuthComposable(
             )
         },
         changeState = viewModel::changeState,
-        isLoading = viewModel.loadingState == AuthViewModel.SignInEvent.LOADING
+        isLoading = viewModel.isLoading,
+        isSignInComplete = viewModel.signInComplete,
+        onSignInComplete = {
+            context.startActivity(Intent(context, MainActivity::class.java))
+        }
     )
 }
 
@@ -65,8 +72,16 @@ fun AuthComposable(
     },
     changeState: () -> Unit = {},
     signInWithGoogle: () -> Unit = {},
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    isSignInComplete: Boolean = false,
+    onSignInComplete: () -> Unit = {}
 ) {
+    LaunchedEffect(key1 = isSignInComplete, block = {
+        if (isSignInComplete) {
+            onSignInComplete()
+        }
+    })
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
