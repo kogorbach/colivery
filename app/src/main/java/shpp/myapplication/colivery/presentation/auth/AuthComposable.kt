@@ -8,19 +8,19 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import shpp.myapplication.colivery.R
 import shpp.myapplication.colivery.utils.EmailValidator
@@ -67,70 +67,74 @@ fun AuthComposable(
     signInWithGoogle: () -> Unit = {},
     isLoading: Boolean = false
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.spacerNormal))
-            .semantics { contentDescription = Semantics.AUTH_COMPOSABLE },
-        verticalArrangement = Arrangement.SpaceBetween
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            AuthTextField(
-                input = emailValidator.input,
-                isError = emailValidator.error,
-                onChange = { emailValidator.onInputChange(it) },
-                onUnfocus = { emailValidator.onUnfocus() },
-                onFocus = { emailValidator.onFocus() },
-                label = stringResource(R.string.emailInputLabel),
-                modifier = Modifier.fillMaxWidth()
-            )
-            AuthTextField(
-                input = passwordValidator.input,
-                isError = passwordValidator.error,
-                onChange = { passwordValidator.onInputChange(it) },
-                onUnfocus = { passwordValidator.onUnfocus() },
-                onFocus = { passwordValidator.onFocus() },
-                label = stringResource(R.string.passwordInputLabel),
-                modifier = Modifier.fillMaxWidth()
-            )
-            NormalSpacer()
-            AuthButton(
-                authState = authState,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                onClick = {
-                    onAuthButtonClick()
-                }
-            )
-            NormalSpacer()
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = stringResource(R.string.authOrText)
-            )
-            NormalSpacer()
-            GoogleAuthButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onAuthClick = {
-                    signInWithGoogle()
-                })
-        }
         AnimatedVisibility(visible = isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
                     .semantics { contentDescription = Semantics.SIGN_IN_PROGRESS }
             )
         }
-        ChangeAuthActionText(
+        Column(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .semantics { contentDescription = Semantics.AUTH_CHANGE_OPTION }
-                .padding(dimensionResource(id = R.dimen.spacerNormal)),
-            onClick = {
-                changeState()
-            },
-            state = authState
-        )
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.spacerNormal))
+                .semantics { contentDescription = Semantics.AUTH_COMPOSABLE },
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                AuthTextField(
+                    input = emailValidator.input,
+                    isError = emailValidator.error,
+                    onChange = { emailValidator.onInputChange(it) },
+                    onUnfocus = { emailValidator.onUnfocus() },
+                    onFocus = { emailValidator.onFocus() },
+                    label = stringResource(R.string.emailInputLabel),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                AuthTextField(
+                    input = passwordValidator.input,
+                    isError = passwordValidator.error,
+                    onChange = { passwordValidator.onInputChange(it) },
+                    onUnfocus = { passwordValidator.onUnfocus() },
+                    onFocus = { passwordValidator.onFocus() },
+                    label = stringResource(R.string.passwordInputLabel),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                NormalSpacer()
+                AuthButton(
+                    authState = authState,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    onClick = {
+                        onAuthButtonClick()
+                    }
+                )
+                NormalSpacer()
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = stringResource(R.string.authOrText)
+                )
+                NormalSpacer()
+                GoogleAuthButton(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onAuthClick = {
+                        signInWithGoogle()
+                    })
+            }
+            ChangeAuthActionText(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .semantics { contentDescription = Semantics.AUTH_CHANGE_OPTION }
+                    .padding(dimensionResource(id = R.dimen.spacerNormal)),
+                onClick = {
+                    changeState()
+                },
+                state = authState
+            )
+        }
     }
 }
 
@@ -201,6 +205,9 @@ private fun ChangeAuthActionText(
     state: AuthState
 ) {
     ClickableText(
+        style = TextStyle(
+            fontSize = 16.sp
+        ),
         modifier = modifier,
         text = AnnotatedString(
             stringResource(
