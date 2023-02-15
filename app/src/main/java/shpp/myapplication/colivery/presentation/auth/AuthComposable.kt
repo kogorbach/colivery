@@ -44,12 +44,15 @@ fun AuthComposable(
         emailValidator = viewModel.emailValidator,
         passwordValidator = viewModel.passwordValidator,
         authState = viewModel.state,
+        isAuthButtonClicked = viewModel.authButtonClicked,
         onAuthButtonClick = {
             focusManager.clearFocus()
-            onAuthButtonClick(
-                viewModel = viewModel,
-                onNavigateToRegistration = onNavigateToRegistration
+            setAuthButtonClicked(
+                viewModel = viewModel
             )
+        },
+        onAuthAction = {
+            onAuthAction(viewModel, onNavigateToRegistration)
         },
         changeState = viewModel::changeState,
         isLoading = viewModel.isLoading,
@@ -66,21 +69,28 @@ fun AuthComposable(
     authState: AuthState,
     emailValidator: InputValidator = EmailValidator(),
     passwordValidator: InputValidator = PasswordValidator(),
+    isAuthButtonClicked: Boolean = false,
     onAuthButtonClick: () -> Unit = {
         emailValidator.validate()
         passwordValidator.validate()
     },
+    onAuthAction: () -> Unit = {},
     changeState: () -> Unit = {},
     signInWithGoogle: () -> Unit = {},
     isLoading: Boolean = false,
     isSignInComplete: Boolean = false,
     onSignInComplete: () -> Unit = {}
 ) {
-    LaunchedEffect(key1 = isSignInComplete, block = {
+    LaunchedEffect(key1 = isSignInComplete) {
         if (isSignInComplete) {
             onSignInComplete()
         }
-    })
+    }
+    LaunchedEffect(key1 = isAuthButtonClicked) {
+        if (isAuthButtonClicked) {
+            onAuthAction()
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -236,7 +246,13 @@ private fun GoogleAuthButton(modifier: Modifier, onAuthClick: () -> Unit) {
     }
 }
 
-private fun onAuthButtonClick(
+private fun setAuthButtonClicked(
+    viewModel: AuthViewModel
+) {
+    viewModel.authButtonClicked = true
+}
+
+fun onAuthAction(
     viewModel: AuthViewModel,
     onNavigateToRegistration: (String, String) -> Unit
 ) {

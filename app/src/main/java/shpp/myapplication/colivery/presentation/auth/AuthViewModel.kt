@@ -30,6 +30,7 @@ class AuthViewModel @Inject constructor(
         private set
     var signInError by mutableStateOf<String?>(null)
         private set
+    var authButtonClicked by mutableStateOf(false)
 
     fun changeState() {
         state = state.changeState()
