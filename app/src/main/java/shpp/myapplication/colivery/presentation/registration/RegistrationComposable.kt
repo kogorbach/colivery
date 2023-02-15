@@ -2,6 +2,7 @@ package shpp.myapplication.colivery.presentation.registration
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -14,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -87,6 +89,9 @@ fun NicknameTextField(
                     .onFocusChanged {
                         onFocusChange(it)
                     },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
                 label = { Text(text = stringResource(id = R.string.nicknameHint)) },
                 isError = error
             )
@@ -123,7 +128,9 @@ fun TelegramTextField(
                         contentDescription = null
                     )
                 },
-
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done // todo change to Next when other fields are implemented
+                ),
                 label = { Text(text = stringResource(id = R.string.telegramHint)) },
                 isError = error
             )
