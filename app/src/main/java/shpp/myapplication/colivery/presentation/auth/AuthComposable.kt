@@ -5,6 +5,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +22,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -113,12 +119,24 @@ fun AuthComposable(
                 AuthTextField(
                     inputValidator = emailValidator,
                     label = stringResource(R.string.emailInputLabel),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Email
+                    )
                 )
                 AuthTextField(
                     inputValidator = passwordValidator,
                     label = stringResource(R.string.passwordInputLabel),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { onAuthAction() }
+                    ),
+                    visualTransformation = PasswordVisualTransformation()
                 )
                 NormalSpacer()
                 AuthButton(
@@ -165,6 +183,9 @@ private fun AuthTextField(
     inputValidator: InputValidator,
     modifier: Modifier,
     label: String,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
 
     inputValidator.run {
@@ -177,6 +198,9 @@ private fun AuthTextField(
                         onFocusChange(it)
                     },
                 onValueChange = { onInputChange(it) },
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                visualTransformation = visualTransformation,
                 label = { Text(text = label) },
                 isError = error
             )
