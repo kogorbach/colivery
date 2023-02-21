@@ -1,46 +1,40 @@
 package shpp.myapplication.colivery.auth
 
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
-import androidx.navigation.compose.ComposeNavigator
 //import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Before
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import shpp.myapplication.colivery.domain.repo.FirebaseRepository
 import shpp.myapplication.colivery.presentation.auth.AuthActivity
-import shpp.myapplication.colivery.presentation.auth.AuthNavHost
 import shpp.myapplication.colivery.utils.Semantics
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class AuthNavigationTest {
 
     @get:Rule
     val rule = createAndroidComposeRule<AuthActivity>()
-//    lateinit var navController: TestNavHostController
 
-//    @Before
-//    fun setupAppNavHost() {
-//        rule.setContent {
-//            navController = TestNavHostController(LocalContext.current)
-//            navController.navigatorProvider.addNavigator(ComposeNavigator())
-//            AuthNavHost(navController)
-//        }
-//    }
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var authRepository: FirebaseRepository
 
     @Test
     fun startDestination() {
-
+        authComposable.assertIsDisplayed()
+        authActionButton.assertTextEquals()
     }
 
     @Test
-    fun signUp() {
+    fun navigateToRegistration() {
         emailTextInput.performTextInput("validEmail@gmail.com")
         passwordTextInput.performTextInput("myp@ssWord23")
         // then inputs are valid
@@ -52,18 +46,19 @@ class AuthNavigationTest {
         registrationComposable.assertIsDisplayed()
     }
 
-    @Test
-    fun signIn() {
-        changeActionText.performClick()
-        emailTextInput.performTextInput("validEmail@gmail.com")
-        passwordTextInput.performTextInput("myp@ssWord23")
-        // then
-        emailError.assertDoesNotExist()
-        passwordError.assertDoesNotExist()
-        // launch main activity
-        authActionButton.performClick()
-        mainActivity.assertIsDisplayed()
-    }
+    // todo enable after mocking repository
+//    @Test
+//    fun signIn() {
+//        changeActionText.performClick()
+//        emailTextInput.performTextInput("validEmail@gmail.com")
+//        passwordTextInput.performTextInput("myp@ssWord23")
+//        // then
+//        emailError.assertDoesNotExist()
+//        passwordError.assertDoesNotExist()
+//        // launch main activity
+//        authActionButton.performClick()
+//        mainActivity.assertIsDisplayed()
+//    }
 
 
     private val changeActionText by lazy {
@@ -75,19 +70,19 @@ class AuthNavigationTest {
     }
 
     private val emailTextInput by lazy {
-        rule.onNode(hasContentDescription("email input"))
+        rule.onNode(hasContentDescription(Semantics.EMAIL_INPUT))
     }
 
     private val passwordTextInput by lazy {
-        rule.onNode(hasContentDescription("password input"))
+        rule.onNode(hasContentDescription(Semantics.PASSWORD_INPUT))
     }
 
     private val emailError by lazy {
-        rule.onNode(hasContentDescription("email error"))
+        rule.onNode(hasContentDescription(Semantics.EMAIL_ERROR))
     }
 
     private val passwordError by lazy {
-        rule.onNode(hasContentDescription("password error"))
+        rule.onNode(hasContentDescription(Semantics.PASSWORD_ERROR))
     }
 
     private val authComposable by lazy {
