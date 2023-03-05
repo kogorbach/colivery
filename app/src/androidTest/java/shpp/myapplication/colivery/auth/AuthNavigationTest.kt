@@ -1,11 +1,14 @@
 package shpp.myapplication.colivery.auth
 
+import android.app.Application
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 //import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +21,9 @@ import javax.inject.Inject
 @HiltAndroidTest
 class AuthNavigationTest {
 
+    @HiltAndroidApp
+    class MyTestApplication : Application()
+
     @get:Rule
     val rule = createAndroidComposeRule<AuthActivity>()
 
@@ -27,10 +33,14 @@ class AuthNavigationTest {
     @Inject
     lateinit var authRepository: FirebaseRepository
 
+    @Before
+    fun setup() {
+        hiltRule.inject()
+    }
+
     @Test
     fun startDestination() {
         authComposable.assertIsDisplayed()
-        authActionButton.assertTextEquals()
     }
 
     @Test
@@ -47,18 +57,18 @@ class AuthNavigationTest {
     }
 
     // todo enable after mocking repository
-//    @Test
-//    fun signIn() {
-//        changeActionText.performClick()
-//        emailTextInput.performTextInput("validEmail@gmail.com")
-//        passwordTextInput.performTextInput("myp@ssWord23")
-//        // then
-//        emailError.assertDoesNotExist()
-//        passwordError.assertDoesNotExist()
-//        // launch main activity
-//        authActionButton.performClick()
-//        mainActivity.assertIsDisplayed()
-//    }
+    @Test
+    fun signIn() {
+        changeActionText.performClick()
+        emailTextInput.performTextInput("validEmail@gmail.com")
+        passwordTextInput.performTextInput("myp@ssWord23")
+        // then
+        emailError.assertDoesNotExist()
+        passwordError.assertDoesNotExist()
+        // launch main activity
+        authActionButton.performClick()
+        mainActivity.assertIsDisplayed()
+    }
 
 
     private val changeActionText by lazy {

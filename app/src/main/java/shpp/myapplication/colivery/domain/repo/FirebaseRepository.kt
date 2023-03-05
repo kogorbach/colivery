@@ -1,7 +1,5 @@
 package shpp.myapplication.colivery.domain.repo
 
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import kotlinx.coroutines.flow.Flow
 import shpp.myapplication.colivery.data.network.Response
 import shpp.myapplication.colivery.data.network.UserModel
