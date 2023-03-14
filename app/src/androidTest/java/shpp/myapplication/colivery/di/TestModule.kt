@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import shpp.myapplication.colivery.domain.repo.FirebaseRepository
-import shpp.myapplication.colivery.repository.FirebaseAuthMockRepository
+import shpp.myapplication.colivery.domain.repo.AuthRepository
+import shpp.myapplication.colivery.repository.AuthAuthMockRepository
 import javax.inject.Singleton
 
 @Module
@@ -14,7 +14,7 @@ object TestModule {
 
     @Singleton
     @Provides
-    fun provideRepository(): FirebaseRepository {
-        return FirebaseAuthMockRepository()
+    fun provideRepository(): AuthRepository {
+        return AuthAuthMockRepository()
     }
 }

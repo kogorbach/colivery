@@ -5,15 +5,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import shpp.myapplication.colivery.domain.repo.FirebaseRepository
+import shpp.myapplication.colivery.domain.repo.AuthRepository
 import shpp.myapplication.colivery.utils.Constants
 import shpp.myapplication.colivery.utils.ext.usersCollection
 import javax.inject.Inject
 
-class FirebaseRepositoryImpl @Inject constructor(
+class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore
-) : FirebaseRepository {
+) : AuthRepository {
 
 
     override suspend fun signIn(

@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import shpp.myapplication.colivery.data.network.Response
 import shpp.myapplication.colivery.data.network.UserModel
-import shpp.myapplication.colivery.domain.repo.FirebaseRepository
+import shpp.myapplication.colivery.domain.repo.AuthRepository
 import shpp.myapplication.colivery.utils.NicknameValidator
 import shpp.myapplication.colivery.utils.TelegramValidator
 import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val repository: FirebaseRepository
+    private val repository: AuthRepository
 ) : ViewModel() {
 
     val nicknameValidator = NicknameValidator()

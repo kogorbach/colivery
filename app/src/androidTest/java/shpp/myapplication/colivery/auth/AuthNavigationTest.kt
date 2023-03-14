@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import shpp.myapplication.colivery.domain.repo.FirebaseRepository
+import shpp.myapplication.colivery.domain.repo.AuthRepository
 import shpp.myapplication.colivery.presentation.auth.AuthActivity
 import shpp.myapplication.colivery.utils.Semantics
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class AuthNavigationTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var authRepository: FirebaseRepository
+    lateinit var authRepository: AuthRepository
 
     @Before
     fun setup() {

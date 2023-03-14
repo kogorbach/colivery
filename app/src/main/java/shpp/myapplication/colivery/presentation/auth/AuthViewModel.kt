@@ -9,14 +9,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import shpp.myapplication.colivery.data.network.Response
-import shpp.myapplication.colivery.domain.repo.FirebaseRepository
+import shpp.myapplication.colivery.domain.repo.AuthRepository
 import shpp.myapplication.colivery.utils.EmailValidator
 import shpp.myapplication.colivery.utils.PasswordValidator
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val firebase: FirebaseRepository
+    private val authRepo: AuthRepository
 ) : ViewModel() {
 
     val emailValidator = EmailValidator()
@@ -44,7 +44,7 @@ class AuthViewModel @Inject constructor(
 
     fun signIn() {
         viewModelScope.launch {
-            firebase.signIn(emailValidator.input, passwordValidator.input).collectLatest {
+            authRepo.signIn(emailValidator.input, passwordValidator.input).collectLatest {
                 when (it) {
                     is Response.Failure -> {
                         isLoading = false

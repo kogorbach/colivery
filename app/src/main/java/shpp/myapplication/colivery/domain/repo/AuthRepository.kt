@@ -6,7 +6,7 @@ import shpp.myapplication.colivery.data.network.UserModel
 
 typealias Credentials = Pair<String, String>
 
-interface FirebaseRepository {
+interface AuthRepository {
     suspend fun signIn(
         email: String,
         password: String,

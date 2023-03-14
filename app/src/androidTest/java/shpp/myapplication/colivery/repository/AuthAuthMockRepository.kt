@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.flow
 import org.mockito.Mockito.mock
 import shpp.myapplication.colivery.data.network.Response
 import shpp.myapplication.colivery.data.network.UserModel
-import shpp.myapplication.colivery.domain.repo.FirebaseRepository
+import shpp.myapplication.colivery.domain.repo.AuthRepository
 import shpp.myapplication.colivery.utils.Constants
 
-class FirebaseAuthMockRepository : FirebaseRepository {
+class AuthAuthMockRepository : AuthRepository {
     private val auth = mock(FirebaseAuth::class.java)
 
     var shouldReturnNetworkError = false
