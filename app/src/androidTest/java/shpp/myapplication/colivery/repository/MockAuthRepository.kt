@@ -10,7 +10,7 @@ import shpp.myapplication.colivery.data.network.UserModel
 import shpp.myapplication.colivery.domain.repo.AuthRepository
 import shpp.myapplication.colivery.utils.Constants
 
-class AuthAuthMockRepository : AuthRepository {
+class MockAuthRepository : AuthRepository {
     private val auth = mock(FirebaseAuth::class.java)
 
     var shouldReturnNetworkError = false
