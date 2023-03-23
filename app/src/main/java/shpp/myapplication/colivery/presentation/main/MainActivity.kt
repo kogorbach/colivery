@@ -1,5 +1,6 @@
-package shpp.myapplication.colivery.presentation
+package shpp.myapplication.colivery.presentation.main
 
+import SpacesComposable
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,9 +30,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MainContent() {
-        Text(
-            text = "Main Activity",
-            modifier = Modifier.semantics { contentDescription = Semantics.MAIN_ACTIVITY }
-        )
+        SpacesComposable()
     }
 }

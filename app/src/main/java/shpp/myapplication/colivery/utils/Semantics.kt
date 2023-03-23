@@ -24,4 +24,9 @@ object Semantics {
 
     // MainActivity
     const val MAIN_ACTIVITY = "mainActivity"
+    const val SPACES_COMPOSABLE = "spaces composable"
+
+    // SpacesComposable
+    const val ADD_SPACE_FAB = "add space fab"
+    const val SPACE_ICON = "space icon"
 }

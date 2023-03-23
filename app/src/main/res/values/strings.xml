@@ -12,11 +12,14 @@
     <string name="authActionSignIn">Sign in</string>
     <string name="authActionSignUp">Sign up</string>
 
-<!--    registration screen-->
+    <!--    registration screen-->
     <string name="nicknameHint">Nickname</string>
     <string name="telegramHint">Telegram nickname</string>
     <string name="nicknameEmptyError">nickname cannot be empty</string>
     <string name="telegramNickEmptyError">invalid telegram nickname</string>
     <string name="registrationCompleteButtonText">Complete</string>
+
+    <!--    spaces list screen-->
+    <string name="no_spaces_warning">To start ordering with Colivery, you need to create a space.</string>
 
 </resources>

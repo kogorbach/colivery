@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import shpp.myapplication.colivery.R
-import shpp.myapplication.colivery.presentation.MainActivity
+import shpp.myapplication.colivery.presentation.main.MainActivity
 import shpp.myapplication.colivery.utils.EmailValidator
 import shpp.myapplication.colivery.utils.InputValidator
 import shpp.myapplication.colivery.utils.PasswordValidator
